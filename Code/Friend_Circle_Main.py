@@ -25,10 +25,11 @@ Ce que je veux pouvoir faire:
 @ui.page('/')
 def Main_page():
     layout()
-    accueildesign("Page d\'accueil", 125)
+    ncal = 0
+    accueildesign("Page d\'accueil", 125, ncal)
     with ui.scroll_area().classes('w-full h-195'):
         with ui.grid().classes('grid-flow-col auto-cols-fr gap-4 w-max p-4'):
-            for i in range(8):
+            for i in range(ncal):
                 with ui.card().classes('w-100 h-176').style('background-color: #d293d2; border-radius: 10px; box-shadow: 0px 0px 10px #8030c0'):
                     ui.label(f'Calendrier {i+1}').classes('font-bold text-2xl')
                     with ui.row().classes('justify-end items-center gap-2'):
