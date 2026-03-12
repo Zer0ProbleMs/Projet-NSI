@@ -1,0 +1,3 @@
+Simple explication:
+
+Pour le bon fonctionnement du code, soyez sûr d'ouvrir "Friend Circle's Workspace" qui ouvrira le dossier entier, puis poursuivez par ouvrir Main.py et l'executer.
