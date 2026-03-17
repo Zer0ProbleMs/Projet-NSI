@@ -1,6 +1,6 @@
 from nicegui import app, ui
 from Layout import *
-
+import uuid  # ← ADD THIS
 """  
 Commande que je préfèrerais ne pas oublier:
 - .style('border-radius: value;')
@@ -23,20 +23,64 @@ Ce que je veux pouvoir faire:
 """
 
 @ui.page('/')
-def Main_page():
-    layout()
-    ncal = 1
-    accueildesign("Page d\'accueil", 125, ncal)
-    with ui.scroll_area().classes('w-full h-195'):
-        with ui.grid().classes('grid-flow-col auto-cols-fr gap-4 w-max p-4'):
-            with ui.card().classes('w-100 h-176').style('background-color: #d293d2; border-radius: 10px; box-shadow: 0px 0px 10px #8030c0'): #Permet la création d'un calendrier
-                ui.label(f'Calendrier 1').classes('font-bold text-2xl') #Le nom changera selon le calendrier
-                with ui.row().classes('justify-end items-center gap-2'):
-                    with ui.image('Designs\Triple_points.png').classes('w-12 cursor-pointer hover:opacity-80').style('position: absolute; transform: translate(-50%, -50%); left: 85%; top: 5% '):
-                        with ui.menu() as menu:
-                            ui.menu_item("Paramètrage").style('background-color: #8030c0; color: #ffffff').classes('py-2 px-25 text-center font-light left') #Ne changera pas selon le calendrier
-                            ui.menu_item("Supprimer").style('background-color: #8030c0; color: #ffffff').classes('py-2 px-25 text-center font-light left')
-                ui.button("Ouvrir", on_click=lambda: ui.navigate.to('/calendrier')).style('position: absolute; transform: translate(-50%, -50%); top: 90%; left: 50%; width: 75%; height: 15%; border-radius: 50px') #Le lien vers le calendrier changera
-                
-            
-ui.run()
+def main_page():
+
+    if 'calendars' not in app.storage.general:
+        app.storage.general['calendars'] = []
+
+    @ui.refreshable
+    def calendar_grid():
+        with ui.scroll_area().classes('w-full h-195'):
+            with ui.grid().classes('grid-flow-col auto-cols-fr gap-4 w-max p-4'):
+                for cal in app.storage.general['calendars']:
+                    cal_id = cal['id']
+                    with ui.card().classes('w-100 h-176').style('background-color: #d293d2; border-radius: 10px; box-shadow: 0px 0px 10px #8030c0'):
+                        ui.label(cal['name']).classes('font-bold text-2xl')
+                        with ui.image('Designs/Triple_points.png').classes('w-12 cursor-pointer hover:opacity-80').style('position: absolute; transform: translate(-50%, -50%); left: 85%; top: 5%'):
+                            with ui.menu():
+                                ui.menu_item("Paramètrage",on_click=lambda cid=cal_id: open_rename_dialog(cid)).style('background-color: #8030c0; color: #ffffff').classes('py-2 px-25 text-center font-light')
+                                ui.menu_item("Supprimer",on_click=lambda cid=cal_id: delete_calendar(cid)).style('background-color: #8030c0; color: #ffffff').classes('py-2 px-25 text-center font-light')
+                        ui.button("Ouvrir", on_click=lambda cid=cal_id: ui.navigate.to(f'/calendrier/{cid}')).style('position: absolute; transform: translate(-50%, -50%); top: 90%; left: 50%; width: 75%; height: 15%; border-radius: 50px')
+
+    def add_calendar():
+        new_cal = {'id': str(uuid.uuid4()), 'name': f'Calendrier {len(app.storage.general["calendars"]) + 1}'}
+        app.storage.general['calendars'].append(new_cal)
+        calendar_grid.refresh()
+
+    def open_rename_dialog(cal_id):
+        cal = next(c for c in app.storage.general['calendars'] if c['id'] == cal_id)
+        with ui.dialog() as dialog, ui.card():
+            ui.label('Renommer le calendrier').classes('font-bold text-xl')
+            name_input = ui.input('Nouveau nom', value=cal['name'])
+            with ui.row():
+                ui.button('Annuler', on_click=dialog.close)
+                def save_name():
+                    cal['name'] = name_input.value
+                    app.storage.general['calendars'] = app.storage.general['calendars']
+                    dialog.close()
+                    calendar_grid.refresh()
+                ui.button('Sauvegarder', on_click=save_name).style('background-color: #8030c0; color: white')
+        dialog.open()
+
+    def delete_calendar(cal_id):
+        app.storage.general['calendars'] = [c for c in app.storage.general['calendars'] if c['id'] != cal_id]
+        calendar_grid.refresh()
+
+    accueildesign("Page d'accueil", 125, len(app.storage.general['calendars']), on_add=add_calendar)
+    calendar_grid()
+
+
+@ui.page('/calendrier/{cal_id}')
+def calendar_page(cal_id: str):
+    calendars = app.storage.general.get('calendars', [])
+    cal = next((c for c in calendars if c['id'] == cal_id), None)
+
+    if cal is None:
+        ui.label('Calendrier introuvable').classes('text-red-500 text-2xl')
+        ui.button('Retour', on_click=lambda: ui.navigate.to('/')).style('background-color: #8030c0; color: white')
+        return
+
+    ui.label(cal['name']).classes('font-bold text-3xl')
+
+
+ui.run(storage_secret='your-secret-key')

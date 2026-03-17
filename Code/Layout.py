@@ -46,7 +46,7 @@ def maindesign(nomdepage, largeurg):
                 ui.image('Designs\Profil_icon.png').classes('w-24')
         ui.label(nomdepage).style('position: absolute; top: 50%; left: 10%; transform: translate(-50%, -50%);').classes('text-4xl font-extrabold text-left')      
 
-def accueildesign(nomdepage, largeurg, ncal):
+def accueildesign(nomdepage, largeurg, ncal, on_add=None):
     ui.page_title(nomdepage)
     layout()   
 
@@ -65,7 +65,7 @@ def accueildesign(nomdepage, largeurg, ncal):
             ui.image("Designs\Point_d'interrogation.png").classes('w-16').style('position: absolute; top: 90%; left: 22%')
 
     with ui.right_drawer(top_corner=True, bottom_corner=True).style(f'background-color: #964be1; width: 50%').props('width=125'):
-        with ui.button(on_click=lambda e: ui.notify("hi")).style('position: absolute; transform: translate(-50%, -50%); top: 95%; left: 50%; width: 100%; height: 15%'):
+        with ui.button(on_click=lambda e: on_add() if on_add else ui.notify("Aucune action définie")).style('position: absolute; transform: translate(-50%, -50%); top: 95%; left: 50%; width: 100%; height: 15%'):
             ui.image('Designs\Symbole_plus2.png').style('position: absolute; transform: translate(-50%, -50%); top: 43%; left: 50%').classes('w-16')
         #Les boutons notifications et messages se trouverons la!
         with ui.row().classes('w-full items-center'):
