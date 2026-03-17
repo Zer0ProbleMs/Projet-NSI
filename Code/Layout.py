@@ -64,11 +64,11 @@ def accueildesign(nomdepage, largeurg, ncal, on_add=None):
             ui.image('Designs/Symbole_plus2.png').style('position: absolute; transform: translate(-50%, -50%); top: 43%; left: 50%').classes('w-16')
         #Les boutons notifications et messages se trouverons la!
         with ui.row().classes('w-full items-center'):
-            with ui.image('Designs/Cloche.png').classes('w-16 cursor-pointer hover:opacity-80').style('position: absolute; transform: translate(-50%, -50%); left: 50%; top: 15% ').on('click', lambda e: ui.notify("You pressed the notification button")):
+            with ui.image('Designs/Cloche.png').classes('w-16 cursor-pointer hover:opacity-80').style('position: absolute; transform: translate(-50%, -50%); left: 50%; top: 15% ').on('click', lambda: ui.notify("You pressed the notification button")):
                 with ui.menu() as menu:
                     ui.label("Hello").style('background-color: #8030c0; color: #ffffff').classes('text-2xl py-5 px-25 text-center font-light') # A remplacer par une petite boîte page qui affiche les notifications d'utilisateurs
-            ui.image('Designs/Message_icon.png').classes('w-16 cursor-pointer hover:opacity-80').style('position: absolute; transform: translate(-50%, -50%); left: 50%; top: 25%').on('click', lambda e: ui.notify("You pressed the messages button"))
-            ui.image('Designs/Friends_icon.png').classes('w-16 cursor-pointer hover:opacity-80').style('position: absolute; transform: translate(-50%, -50%); left: 50%; top: 35%').on('click', lambda e: menu_amis())
+            ui.image('Designs/Message_icon.png').classes('w-16 cursor-pointer hover:opacity-80').style('position: absolute; transform: translate(-50%, -50%); left: 50%; top: 25%').on('click', lambda: ui.notify("You pressed the messages button"))
+            ui.image('Designs/Friends_icon.png').classes('w-16 cursor-pointer hover:opacity-80').style('position: absolute; transform: translate(-50%, -50%); left: 50%; top: 35%').on('click', lambda: menu_amis())
 
 
     with ui.header(elevated=True).style(f'background-color: #964be1; height: 10%').classes('items-center justify-between'):
@@ -134,7 +134,7 @@ def menu_amis():
             ui.label("Amis").style('background-color: #8030c0; color: #ffffff').classes('text-2xl py-5 px-25 text-center font-light')
             ui.separator().style('background-color: #964be1')
             amis = ["Daris", "Tidianne", "Quelqu'un"]
-            ui.input(placeholder='Rechercher...').style('width: 100%; background-color: #8030c0').props('input-style="padding-left: 25px"')
+            ui.input(placeholder='Rechercher...', autocomplete=amis).style('width: 100%; background-color: #8030c0').props('input-style="padding-left: 25px')
             for ami in amis:
                 with ui.row().classes('items-center gap-2 p-2').style('background-color: #8030c0') :
                     with ui.slide_item().style('background-color: #d7a0d7; border-radius: 3px; width: 100%; height: 100%') as slide_item:
