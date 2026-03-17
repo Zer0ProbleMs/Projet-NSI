@@ -134,7 +134,7 @@ def menu_amis():
             ui.label("Amis").style('background-color: #8030c0; color: #ffffff').classes('text-2xl py-5 px-25 text-center font-light')
             ui.separator().style('background-color: #964be1')
             amis = ["Daris", "Tidianne", "Quelqu'un"]
-            ui.input(placeholder='Rechercher...', autocomplete=amis).style('width: 100%; background-color: #8030c0').props('input-style="padding-left: 25px')
+            ui.input(placeholder='Rechercher...', autocomplete=amis).style('width: 100%; background-color: #8030c0')
             for ami in amis:
                 with ui.row().classes('items-center gap-2 p-2').style('background-color: #8030c0') :
                     with ui.slide_item().style('background-color: #d7a0d7; border-radius: 3px; width: 100%; height: 100%') as slide_item:
