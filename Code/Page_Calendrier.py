@@ -11,6 +11,6 @@ def Page_Calendrier(cal_id: str):
         ui.button('Retour', on_click=lambda: ui.navigate.to('/')).style('background-color: #8030c0; color: white')
         return
 
-    ui.label(cal['name']).classes('font-bold text-3xl')
+    maindesign(cal['name'], 125)
 
 ui.run(storage_secret='clé-secrete')
