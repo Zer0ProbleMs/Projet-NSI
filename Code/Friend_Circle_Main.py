@@ -29,11 +29,11 @@ def main_page():
 
     @ui.refreshable
     def liste_calendriers():
-        with ui.scroll_area().classes('w-full h-195'):
+        with ui.scroll_area().classes('w-full h-200'):
             with ui.grid().classes('grid-flow-col auto-cols-fr gap-4 w-max p-4'):
                 for cal in app.storage.general['calendriers']:
                     cal_id = cal['id']
-                    with ui.card().classes('w-100 h-176').style('background-color: #d293d2; border-radius: 10px; box-shadow: 0px 0px 10px #8030c0'):
+                    with ui.card().classes('w-100 h-184').style('background-color: #d293d2; border-radius: 10px; box-shadow: 0px 0px 10px #8030c0'):
                         ui.label(cal['name']).classes('font-bold text-2xl')
                         with ui.image('Designs/Triple_points.png').classes('w-12 cursor-pointer hover:opacity-80').style('position: absolute; transform: translate(-50%, -50%); left: 85%; top: 5%'):
                             with ui.menu():
