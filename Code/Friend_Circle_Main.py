@@ -25,18 +25,18 @@ Ce que je veux pouvoir faire:
 @ui.page('/')
 def Main_page():
     layout()
-    ncal = 0
+    ncal = 1
     accueildesign("Page d\'accueil", 125, ncal)
     with ui.scroll_area().classes('w-full h-195'):
         with ui.grid().classes('grid-flow-col auto-cols-fr gap-4 w-max p-4'):
-            for i in range(ncal):
-                with ui.card().classes('w-100 h-176').style('background-color: #d293d2; border-radius: 10px; box-shadow: 0px 0px 10px #8030c0'):
-                    ui.label(f'Calendrier {i+1}').classes('font-bold text-2xl')
-                    with ui.row().classes('justify-end items-center gap-2'):
-                        with ui.image('Designs\Triple_points.png').classes('w-12 cursor-pointer hover:opacity-80').style('position: absolute; transform: translate(-50%, -50%); left: 85%; top: 5% '):
-                            with ui.menu() as menu:
-                                ui.menu_item("Hello").style('background-color: #8030c0; color: #ffffff').classes('py-2 px-25 text-center font-light left') # A remplacer par une petite boîte page qui affiche les notifications d'utilisateurs
-                    ui.button("Ouvrir", on_click=lambda: ui.navigate.to('/calendrier')).style('position: absolute; transform: translate(-50%, -50%); top: 90%; left: 50%; width: 75%; height: 15%; border-radius: 50px')
+            with ui.card().classes('w-100 h-176').style('background-color: #d293d2; border-radius: 10px; box-shadow: 0px 0px 10px #8030c0'): #Permet la création d'un calendrier
+                ui.label(f'Calendrier 1').classes('font-bold text-2xl') #Le nom changera selon le calendrier
+                with ui.row().classes('justify-end items-center gap-2'):
+                    with ui.image('Designs\Triple_points.png').classes('w-12 cursor-pointer hover:opacity-80').style('position: absolute; transform: translate(-50%, -50%); left: 85%; top: 5% '):
+                        with ui.menu() as menu:
+                            ui.menu_item("Paramètrage").style('background-color: #8030c0; color: #ffffff').classes('py-2 px-25 text-center font-light left') #Ne changera pas selon le calendrier
+                            ui.menu_item("Supprimer").style('background-color: #8030c0; color: #ffffff').classes('py-2 px-25 text-center font-light left')
+                ui.button("Ouvrir", on_click=lambda: ui.navigate.to('/calendrier')).style('position: absolute; transform: translate(-50%, -50%); top: 90%; left: 50%; width: 75%; height: 15%; border-radius: 50px') #Le lien vers le calendrier changera
                 
             
 ui.run()
