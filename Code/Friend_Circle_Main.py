@@ -46,7 +46,7 @@ def main_page():
                                     with ui.item_section().props('avatar'):
                                         ui.icon('settings')
                                 ui.separator().style('background-color: #964be1')
-                                with ui.menu_item("Supprimer",on_click=lambda cid=cal_id: supprimer_calendrier(cid)).style('background-color: #8030c0; color: #ffffff').classes('py-2 px-25 text-left font-light text-xl'):
+                                with ui.menu_item("Supprimer",on_click=lambda cid=cal_id: supprimer_calendrier(cid)).style('background-color: #8030c0; color: #ffffff').classes('py-2 px-25 text-center font-light text-xl'):
                                     with ui.item_section().props('avatar'):
                                         ui.icon('delete')
                                 ui.separator().style('background-color: #964be1')
