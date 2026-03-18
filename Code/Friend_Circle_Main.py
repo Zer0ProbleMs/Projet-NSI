@@ -52,7 +52,7 @@ def main_page():
                                 ui.separator().style('background-color: #964be1')
                                 with ui.menu_item('Fermer', ui.menu.close).style('background-color: #8030c0; color: #ffffff').classes('py-2 px-25 text-center font-light text-xl'):
                                     with ui.item_section().props('avatar'):
-                                        ui.icon('chevron_left')
+                                        ui.icon('close')
                         ui.button("Ouvrir", on_click=lambda cid=cal_id: ui.navigate.to(f'/calendrier/{cid}')).style('position: absolute; transform: translate(-50%, -50%); top: 90%; left: 50%; width: 75%; height: 15%; border-radius: 50px')
 
     def ajouter_calendrier():
