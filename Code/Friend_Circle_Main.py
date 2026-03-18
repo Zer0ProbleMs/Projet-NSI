@@ -34,13 +34,29 @@ def main_page():
 
     @ui.refreshable
     def liste_calendriers():
-        with ui.scroll_area().classes('w-full h-200'):
+        with ui.scroll_area().classes('w-full h-195'):
             with ui.grid().classes('grid-flow-col auto-cols-fr gap-4 w-max p-4'):
                 for cal in app.storage.general['calendriers']:
                     cal_id = cal['id']
-                    with ui.card().classes('w-100 h-184').style('background-color: #d293d2; border-radius: 10px; box-shadow: 0px 0px 10px #8030c0'):
+                    snapshot = cal.get('snapshot', '')
+
+                    with ui.card().classes('w-100 h-176').style(
+                        'background-color: #d293d2; border-radius: 10px; box-shadow: 0px 0px 10px #8030c0; overflow:hidden'
+                    ):
                         ui.label(cal['name']).classes('font-bold text-2xl')
-                        with ui.image('Designs/Triple_points.png').classes('w-12 cursor-pointer hover:opacity-80').style('position: absolute; transform: translate(-50%, -50%); left: 85%; top: 5%'):
+
+                        # ↓ Snapshot preview iframe
+                        ui.html(f'''
+                            <div style="position:absolute; top:12%; left:5%; width:90%; height:65%;
+                                        border-radius:8px; overflow:hidden; border:2px solid #8030c0;
+                                        pointer-events:none;">
+                                {snapshot}
+                            </div>
+                        ''')
+
+                        with ui.image('Designs/Triple_points.png').classes(
+                            'w-12 cursor-pointer hover:opacity-80'
+                        ).style('position: absolute; transform: translate(-50%, -50%); left: 85%; top: 5%'):
                             with ui.menu().style('transform: translate(-75%, 0%)'):
                                 with ui.menu_item("Paramètrage",on_click=lambda cid=cal_id: boite_renommer(cid)).style('background-color: #8030c0; color: #ffffff').classes('py-2 px-25 text-center font-light text-xl'):
                                     with ui.item_section().props('avatar'):
@@ -53,11 +69,48 @@ def main_page():
                                 with ui.menu_item('Fermer', ui.menu.close).style('background-color: #8030c0; color: #ffffff').classes('py-2 px-25 text-center font-light text-xl'):
                                     with ui.item_section().props('avatar'):
                                         ui.icon('close')
-                        ui.button("Ouvrir", on_click=lambda cid=cal_id: ui.navigate.to(f'/calendrier/{cid}')).style('position: absolute; transform: translate(-50%, -50%); top: 90%; left: 50%; width: 75%; height: 15%; border-radius: 50px')
 
+                        ui.button(
+                            "Ouvrir",
+                            on_click=lambda cid=cal_id: ui.navigate.to(f'/calendrier/{cid}')
+                        ).style('position: absolute; transform: translate(-50%, -50%); top: 90%; left: 50%; width: 75%; height: 15%; border-radius: 50px')
+
+    def generate_snapshot(name: str) -> str:
+        days = ''.join(
+            f'<div style="background:#c070e0;color:white;text-align:center;font-size:10px;padding:2px;border-radius:2px">{i}</div>'
+            for i in range(1, 32)
+        )
+        return (
+            '<div style="margin:0;padding:8px;background:#d293d2;font-family:sans-serif;overflow:hidden;height:100%">'
+            '<div style="font-weight:bold;font-size:14px;color:#3d0070;margin-bottom:6px">Aperçu</div>'
+            '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:6px">'
+            '<div style="background:#8030c0;color:white;text-align:center;font-size:10px;padding:2px;border-radius:2px">L</div>'
+            '<div style="background:#8030c0;color:white;text-align:center;font-size:10px;padding:2px;border-radius:2px">M</div>'
+            '<div style="background:#8030c0;color:white;text-align:center;font-size:10px;padding:2px;border-radius:2px">M</div>'
+            '<div style="background:#8030c0;color:white;text-align:center;font-size:10px;padding:2px;border-radius:2px">J</div>'
+            '<div style="background:#8030c0;color:white;text-align:center;font-size:10px;padding:2px;border-radius:2px">V</div>'
+            '<div style="background:#8030c0;color:white;text-align:center;font-size:10px;padding:2px;border-radius:2px">S</div>'
+            '<div style="background:#8030c0;color:white;text-align:center;font-size:10px;padding:2px;border-radius:2px">D</div>'
+            + days +
+            '</div>'
+            '<div style="color:#6010a0;font-size:10px;font-style:italic">Aucun évènement</div>'
+            '</div>'
+        )
+        
     def ajouter_calendrier():
-        new_cal = {'id': str(uuid.uuid4()), 'name': f'Calendrier {len(app.storage.general["calendriers"]) + 1}'}
+        new_cal = {
+            'id': str(uuid.uuid4()),
+            'name': f'Calendrier {len(app.storage.general["calendriers"]) + 1}',
+            'snapshot': generate_snapshot('placeholder')  # ← simpler call
+        }
         app.storage.general['calendriers'].append(new_cal)
+        liste_calendriers.refresh()
+
+    def save_name():
+        cal['name'] = name_input.value
+        cal['snapshot'] = generate_snapshot(cal['name'], cal.get('events', []))  # ← regenerate
+        app.storage.general['calendriers'] = app.storage.general['calendriers']
+        dialog.close()
         liste_calendriers.refresh()
 
     def boite_renommer(cal_id):
@@ -81,5 +134,6 @@ def main_page():
 
     accueildesign("Page d'accueil", 125, len(app.storage.general['calendriers']), on_add=ajouter_calendrier)
     liste_calendriers()
+
 
 ui.run(storage_secret='clé-secrete')
