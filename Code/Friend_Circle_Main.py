@@ -75,42 +75,36 @@ def main_page():
                             on_click=lambda cid=cal_id: ui.navigate.to(f'/calendrier/{cid}')
                         ).style('position: absolute; transform: translate(-50%, -50%); top: 90%; left: 50%; width: 75%; height: 15%; border-radius: 50px')
 
-    def generate_snapshot(name: str) -> str:
+    def generer_snapshot(name: str) -> str:
+        jours = ['L', 'M', 'M', 'J', 'V', 'S', 'D']
+        
+        header = ''.join(
+            f'<div style="background:#8030c0;color:white;text-align:center;font-size:10px;padding:2px;border-radius:2px">{j}</div>'
+            for j in jours
+        )
         days = ''.join(
             f'<div style="background:#c070e0;color:white;text-align:center;font-size:10px;padding:2px;border-radius:2px">{i}</div>'
             for i in range(1, 32)
         )
+        
+        cell = 'background:#8030c0;color:white;text-align:center;font-size:10px;padding:2px;border-radius:2px'
+        grid_style = 'display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:6px'
+        
         return (
-            '<div style="margin:0;padding:8px;background:#d293d2;font-family:sans-serif;overflow:hidden;height:100%">'
-            '<div style="font-weight:bold;font-size:14px;color:#3d0070;margin-bottom:6px">Aperçu</div>'
-            '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:6px">'
-            '<div style="background:#8030c0;color:white;text-align:center;font-size:10px;padding:2px;border-radius:2px">L</div>'
-            '<div style="background:#8030c0;color:white;text-align:center;font-size:10px;padding:2px;border-radius:2px">M</div>'
-            '<div style="background:#8030c0;color:white;text-align:center;font-size:10px;padding:2px;border-radius:2px">M</div>'
-            '<div style="background:#8030c0;color:white;text-align:center;font-size:10px;padding:2px;border-radius:2px">J</div>'
-            '<div style="background:#8030c0;color:white;text-align:center;font-size:10px;padding:2px;border-radius:2px">V</div>'
-            '<div style="background:#8030c0;color:white;text-align:center;font-size:10px;padding:2px;border-radius:2px">S</div>'
-            '<div style="background:#8030c0;color:white;text-align:center;font-size:10px;padding:2px;border-radius:2px">D</div>'
-            + days +
-            '</div>'
-            '<div style="color:#6010a0;font-size:10px;font-style:italic">Aucun évènement</div>'
-            '</div>'
+            f'<div style="margin:0;padding:8px;background:#d293d2;font-family:sans-serif;overflow:hidden;height:100%">'
+            f'<div style="font-weight:bold;font-size:14px;color:#3d0070;margin-bottom:6px">Aperçu</div>'
+            f'<div style="{grid_style}">{header}{days}</div>'
+            f'<div style="color:#6010a0;font-size:10px;font-style:italic">Aucun évènement</div>'
+            f'</div>'
         )
         
     def ajouter_calendrier():
         new_cal = {
             'id': str(uuid.uuid4()),
             'name': f'Calendrier {len(app.storage.general["calendriers"]) + 1}',
-            'snapshot': generate_snapshot('placeholder')  # ← simpler call
+            'snapshot': generer_snapshot('placeholder')  # ← simpler call
         }
         app.storage.general['calendriers'].append(new_cal)
-        liste_calendriers.refresh()
-
-    def save_name():
-        cal['name'] = name_input.value
-        cal['snapshot'] = generate_snapshot(cal['name'], cal.get('events', []))  # ← regenerate
-        app.storage.general['calendriers'] = app.storage.general['calendriers']
-        dialog.close()
         liste_calendriers.refresh()
 
     def boite_renommer(cal_id):
