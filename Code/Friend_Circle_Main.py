@@ -20,6 +20,11 @@ Ce que je veux pouvoir faire:
 - Une flèche qui étant le bord gauche, mais aussi que les différentes flèches sur ce même bords, si le bord n'est pas étendu, alors ces flèches l'étendrons.
 - Créer les premier boutons principaux qui mèneront au calendrier choisis
 - Un bouton notification et message avec chacun d'entre eux n'ouvrant pas une page mais une simple boîte avec preview et donne l'option d'ouvrir dans une nouvelle page
+
+-	Qd on modifie le pseudo il se modifie sur la base de données et le profil
+-	Qd on modifie le mdp ça change sur la base de donnée 
+-	Qd on change la photo de profil ça change sur la page profil
+-	Qd on change la bannière 
 """
 
 @ui.page('/')
