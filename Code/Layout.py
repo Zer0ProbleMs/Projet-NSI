@@ -61,13 +61,13 @@ def accueildesign(nomdepage, largeurg, ncal, on_add=None):
             ui.image("Designs/Point_d'interrogation.png").classes('w-16').style('position: absolute; top: 90%; left: 22%')
     with ui.right_drawer(top_corner=True, bottom_corner=True).style(f'background-color: #964be1; width: 50%').props('width=125'):
         with ui.button(on_click=lambda e: on_add() if on_add else ui.notify("Aucune action définie")).style('position: absolute; transform: translate(-50%, -50%); top: 95%; left: 50%; width: 100%; height: 15%'):
-            ui.image('Designs/Symbole_plus2.png').style('position: absolute; transform: translate(-50%, -50%); top: 43%; left: 50%').classes('w-16')
+            ui.icon('add_circle').style('position: absolute; transform: translate(-50%, -50%); top: 43%; left: 50%; width: 50%').props('size=4rem')
         #Les boutons notifications et messages se trouverons la!
         with ui.row().classes('w-full items-center'):
-            with ui.image('Designs/Cloche.png').classes('w-16 cursor-pointer hover:opacity-80').style('position: absolute; transform: translate(-50%, -50%); left: 50%; top: 15% ').on('click', lambda: ui.notify("You pressed the notification button")):
+            with ui.icon('notifications').classes('cursor-pointer hover:opacity-80').style('position: absolute; transform: translate(-50%, -50%); left: 50%; top: 15% ').on('click', lambda: ui.notify("You pressed the notification button")).props('size=4rem'):
                 with ui.menu() as menu:
                     ui.label("Hello").style('background-color: #8030c0; color: #ffffff').classes('text-2xl py-5 px-25 text-center font-light') # A remplacer par une petite boîte page qui affiche les notifications d'utilisateurs
-            ui.image('Designs/Message_icon.png').classes('w-16 cursor-pointer hover:opacity-80').style('position: absolute; transform: translate(-50%, -50%); left: 50%; top: 25%').on('click', lambda: ui.notify("You pressed the messages button"))
+            ui.icon('chat').classes('cursor-pointer hover:opacity-80').style('position: absolute; transform: translate(-50%, -50%); left: 50%; top: 25%').on('click', lambda: ui.notify("You pressed the messages button")).props('size=4rem')
             ui.image('Designs/Friends_icon.png').classes('w-16 cursor-pointer hover:opacity-80').style('position: absolute; transform: translate(-50%, -50%); left: 50%; top: 35%').on('click', lambda: menu_amis())
 
 
@@ -76,9 +76,8 @@ def accueildesign(nomdepage, largeurg, ncal, on_add=None):
             ui.image('Designs/FriendCircle1.png').classes('w-64').style('position: absolute; top: 50%; left: 55%; transform: translate(-50%, -50%);')
         ui.input(placeholder='Rechercher...').style('position: absolute; left: 65%; top: 20%; width: 30%; background-color: #8030c0; border-radius: 5px').classes('text-xl')
         
-        with ui.avatar().style('position: absolute; left: 102%;').classes('w-16 h-16'):
-            with ui.link(target='/profile'):
-                ui.image('Designs/Profil_icon.png').classes('w-24')
+        with ui.avatar().style('position: absolute; left: 102%;').classes('w-16 h-16').classes('cursor-pointer hover:opacity-80').on('click', lambda: ui.navigate.to('/profile')):
+            ui.icon('account_circle').props('size=4rem').props('size=4rem')
         ui.label(nomdepage).style('position: absolute; top: 50%; left: 10%; transform: translate(-50%, -50%);').classes('text-4xl font-extrabold text-left')      
 
 def designaide(nomdepage, largeurg):
@@ -148,5 +147,4 @@ def menu_amis():
                                     ui.item_section('Supprimer?')
                                     with ui.item_section().props('avatar'):
                                         ui.icon('delete')
-
                     ui.separator()

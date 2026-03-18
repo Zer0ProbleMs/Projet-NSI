@@ -36,9 +36,18 @@ def main_page():
                     with ui.card().classes('w-100 h-184').style('background-color: #d293d2; border-radius: 10px; box-shadow: 0px 0px 10px #8030c0'):
                         ui.label(cal['name']).classes('font-bold text-2xl')
                         with ui.image('Designs/Triple_points.png').classes('w-12 cursor-pointer hover:opacity-80').style('position: absolute; transform: translate(-50%, -50%); left: 85%; top: 5%'):
-                            with ui.menu():
-                                ui.menu_item("Paramètrage",on_click=lambda cid=cal_id: boite_renommer(cid)).style('background-color: #8030c0; color: #ffffff').classes('py-2 px-25 text-center font-light')
-                                ui.menu_item("Supprimer",on_click=lambda cid=cal_id: supprimer_calendrier(cid)).style('background-color: #8030c0; color: #ffffff').classes('py-2 px-25 text-center font-light')
+                            with ui.menu().style('transform: translate(-75%, 0%)'):
+                                with ui.menu_item("Paramètrage",on_click=lambda cid=cal_id: boite_renommer(cid)).style('background-color: #8030c0; color: #ffffff').classes('py-2 px-25 text-center font-light text-xl'):
+                                    with ui.item_section().props('avatar'):
+                                        ui.icon('settings')
+                                ui.separator().style('background-color: #964be1')
+                                with ui.menu_item("Supprimer",on_click=lambda cid=cal_id: supprimer_calendrier(cid)).style('background-color: #8030c0; color: #ffffff').classes('py-2 px-25 text-left font-light text-xl'):
+                                    with ui.item_section().props('avatar'):
+                                        ui.icon('delete')
+                                ui.separator().style('background-color: #964be1')
+                                with ui.menu_item('Fermer', ui.menu.close).style('background-color: #8030c0; color: #ffffff').classes('py-2 px-25 text-center font-light text-xl'):
+                                    with ui.item_section().props('avatar'):
+                                        ui.icon('chevron_left')
                         ui.button("Ouvrir", on_click=lambda cid=cal_id: ui.navigate.to(f'/calendrier/{cid}')).style('position: absolute; transform: translate(-50%, -50%); top: 90%; left: 50%; width: 75%; height: 15%; border-radius: 50px')
 
     def ajouter_calendrier():
