@@ -90,11 +90,16 @@ def designaide(nomdepage, largeurg):
         with ui.row().classes('w-full items-center'):
             with ui.button(icon='menu').style('position: absolute; top: 5%; left: 50%; transform: translate(-50%, -50%); width: 100%; height: 10%; box-shadow: none; border-radius: 10px'):
                 menus()
-        with ui.tabs().style('position: absolute; top: 10%; left: 50%; transform: translate(-50%, -100%); width: 30%; height: 40%').props('vertical').classes('w-full') as tabs:
-            mail = ui.tab('Mails')
-            alarm = ui.tab('Alarms')    
-            movie = ui.tab('Movies')
-            
+        with ui.scroll_area().classes('w-60 h-full'):
+            with ui.column().style(f'transform: translate(0%, 150%); background-color: {violet}'):
+                with ui.menu_item('Général', auto_close=False).style('color: #ffffff'):
+                    with ui.item_section().props('avatar'):
+                        ui.icon('keyboard_arrow_right')
+                    with ui.menu().props('anchor="top end" self="top start" auto-close'):
+                        ui.menu_item('Se déplacer de pages en pages')
+                        ui.menu_item('Créer et modifier son calendrier')
+                        ui.menu_item('Ajouter, supprimer ou communiquer avec contacts')
+                
         with ui.avatar().style('position: absolute; left: 30%; top: 93%').classes('w-12 h-12 cursor-pointer hover:opacity-80').on('click', lambda: ui.navigate.to('/aide')):
             ui.icon("help").props('size=3rem').style(f'color: {violet}')
 
