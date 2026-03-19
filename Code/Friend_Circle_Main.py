@@ -52,7 +52,7 @@ def main_page():
                                         pointer-events:none;">
                                 {snapshot}
                             </div>
-                        ''')
+                        ''', sanitize=False)
 
                         with ui.image('Designs/Triple_points.png').classes(
                             'w-12 cursor-pointer hover:opacity-80'
@@ -104,13 +104,6 @@ def main_page():
             'snapshot': generate_snapshot('placeholder')  # ← simpler call
         }
         app.storage.general['calendriers'].append(new_cal)
-        liste_calendriers.refresh()
-
-    def save_name():
-        cal['name'] = name_input.value
-        cal['snapshot'] = generate_snapshot(cal['name'], cal.get('events', []))  # ← regenerate
-        app.storage.general['calendriers'] = app.storage.general['calendriers']
-        dialog.close()
         liste_calendriers.refresh()
 
     def boite_renommer(cal_id):
