@@ -3,7 +3,6 @@ from Layout import *
 
 @ui.page('/profile')
 def Profile():
-    layout()
     maindesign("Profile", 125)
     ui.image('Designs\Banniere_Noire.jpg').style('transform: translate(-5%, -25%); top : 50% ; left : 0%').classes('h-100 w-screen')
     ui.image('Designs\Profil_icon.png').style('transform: translate(-50%, -100%); top : 100% ; left : 10%').classes('h-64 w-64')
