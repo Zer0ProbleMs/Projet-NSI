@@ -27,8 +27,10 @@ Ce que je veux pouvoir faire:
 -	Qd on change la bannière 
 """
 
+
 @ui.page('/')
 def main_page():
+
     if 'calendriers' not in app.storage.general:
         app.storage.general['calendriers'] = []
 
