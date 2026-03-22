@@ -1,5 +1,6 @@
 from nicegui import app, ui
 from Layout import *
+import Layout
 import uuid 
 """  
 Commande que je préfèrerais ne pas oublier:
@@ -42,15 +43,13 @@ def main_page():
                     cal_id = cal['id']
                     snapshot = cal.get('snapshot', '')
 
-                    with ui.card().classes('w-100 h-176').style(
-                        'background-color: #d293d2; border-radius: 10px; box-shadow: 0px 0px 10px #8030c0; overflow:hidden'
-                    ):
+                    with ui.card().classes('w-100 h-176').style(f'background-color: {Layout.t1act}; border-radius: 10px; box-shadow: 0px 0px 20px {violetfoncé}; overflow:hidden'):
                         ui.label(cal['name']).classes('font-bold text-2xl')
 
                         # ↓ Snapshot preview iframe
                         ui.html(f'''
                             <div style="position:absolute; top:12%; left:5%; width:90%; height:65%;
-                                        border-radius:8px; overflow:hidden; border:2px solid #8030c0;
+                                        border-radius:8px; overflow:hidden; border:2px solid {violetfoncé};
                                         pointer-events:none;">
                                 {snapshot}
                             </div>
@@ -60,43 +59,40 @@ def main_page():
                             'w-12 cursor-pointer hover:opacity-80'
                         ).style('position: absolute; transform: translate(-50%, -50%); left: 85%; top: 5%'):
                             with ui.menu().style('transform: translate(-75%, 0%)'):
-                                with ui.menu_item("Paramètrage",on_click=lambda cid=cal_id: boite_renommer(cid)).style('background-color: #8030c0; color: #ffffff').classes('py-2 px-25 text-center font-light text-xl'):
+                                with ui.menu_item("Paramètrage",on_click=lambda cid=cal_id: boite_renommer(cid)).style(f'background-color: {violetfoncé}; color: white').classes('py-2 px-25 text-center font-light text-xl'):
                                     with ui.item_section().props('avatar'):
                                         ui.icon('settings')
-                                ui.separator().style('background-color: #964be1')
-                                with ui.menu_item("Supprimer",on_click=lambda cid=cal_id: supprimer_calendrier(cid)).style('background-color: #8030c0; color: #ffffff').classes('py-2 px-25 text-center font-light text-xl'):
+                                ui.separator().style(f'background-color: {violet}')
+                                with ui.menu_item("Supprimer",on_click=lambda cid=cal_id: supprimer_calendrier(cid)).style(f'background-color: {violetfoncé}; color: white').classes('py-2 px-25 text-center font-light text-xl'):
                                     with ui.item_section().props('avatar'):
                                         ui.icon('delete')
-                                ui.separator().style('background-color: #964be1')
-                                with ui.menu_item('Fermer', ui.menu.close).style('background-color: #8030c0; color: #ffffff').classes('py-2 px-25 text-center font-light text-xl'):
+                                ui.separator().style(f'background-color: {violet}')
+                                with ui.menu_item('Fermer', ui.menu.close).style(f'background-color: {violetfoncé}; color: white').classes('py-2 px-25 text-center font-light text-xl'):
                                     with ui.item_section().props('avatar'):
                                         ui.icon('close')
 
-                        ui.button(
-                            "Ouvrir",
-                            on_click=lambda cid=cal_id: ui.navigate.to(f'/calendrier/{cid}')
-                        ).style('position: absolute; transform: translate(-50%, -50%); top: 90%; left: 50%; width: 75%; height: 15%; border-radius: 50px')
+                        ui.button("Ouvrir",on_click=lambda cid=cal_id: ui.navigate.to(f'/calendrier/{cid}')).style(f'position: absolute; transform: translate(-50%, -50%); top: 90%; left: 50%; width: 75%; height: 15%; border-radius: 50px; {police1}').classes('text-xl font-bold')
 
     def generer_snapshot(name: str) -> str:
         jours = ['L', 'M', 'M', 'J', 'V', 'S', 'D']
         
         header = ''.join(
-            f'<div style="background:#8030c0;color:white;text-align:center;font-size:10px;padding:2px;border-radius:2px">{j}</div>'
+            f'<div style="background: {violetfoncé}; color: white; text-align: center; font-size: 10px; padding: 2px; order-radius: 2px">{j}</div>'
             for j in jours
         )
         days = ''.join(
-            f'<div style="background:#c070e0;color:white;text-align:center;font-size:10px;padding:2px;border-radius:2px">{i}</div>'
+            f'<div style="background: {rose}; color: white; text-align: center; font-size: 10px; padding: 2px; border-radius: 2px">{i}</div>'
             for i in range(1, 32)
         )
         
-        cell = 'background:#8030c0;color:white;text-align:center;font-size:10px;padding:2px;border-radius:2px'
-        grid_style = 'display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:6px'
+        cell = f'background: {violetfoncé}; color: white; text-align: center; font-size: 10px; padding: 2px; border-radius: 2px'
+        grid_style = 'display: grid; grid-template-columns: repeat(7,1fr); gap: 2px; margin-bottom: 6px'
         
         return (
-            f'<div style="margin:0;padding:8px;background:#d293d2;font-family:sans-serif;overflow:hidden;height:100%">'
-            f'<div style="font-weight:bold;font-size:14px;color:#3d0070;margin-bottom:6px">Aperçu</div>'
+            f'<div style="margin: 0; padding: 8px; background: {rosemoyen}; font-family: sans-serif; overflow: hidden; height: 100%">'
+            f'<div style="font-weight: bold; font-size: 14px; color: {violettrèsfoncé}; margin-bottom: 6px">Aperçu</div>'
             f'<div style="{grid_style}">{header}{days}</div>'
-            f'<div style="color:#6010a0;font-size:10px;font-style:italic">Aucun évènement</div>'
+            f'<div style="color: {violettrèsfoncé}; font-size: 10px; font-style: italic">Aucun évènement</div>'
             f'</div>'
         )
         
@@ -121,15 +117,18 @@ def main_page():
                     app.storage.general['calendriers'] = app.storage.general['calendriers']
                     dialog.close()
                     liste_calendriers.refresh()
-                ui.button('Sauvegarder', on_click=save_name).style('background-color: #8030c0; color: white')
+                ui.button('Sauvegarder', on_click=save_name).style(f'background-color: {violetfoncé}; color: white')
         dialog.open()
 
     def supprimer_calendrier(cal_id):
         app.storage.general['calendriers'] = [c for c in app.storage.general['calendriers'] if c['id'] != cal_id]
         liste_calendriers.refresh()
 
-    accueildesign("Page d'accueil", 125, len(app.storage.general['calendriers']), on_add=ajouter_calendrier)
+    if Layout.theme_sombre:
+        accueildesign("Page d'accueil", 125, bgbleumerfoncé, bleufoncé, bleumer, rouge, len(app.storage.general['calendriers']), on_add=ajouter_calendrier)
+    else:
+        accueildesign("Page d'accueil", 125, bgrose, violet, violetfoncé, rose, len(app.storage.general['calendriers']), on_add=ajouter_calendrier)
+    
     liste_calendriers()
-
 
 ui.run(storage_secret='clé-secrete')

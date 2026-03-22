@@ -5,5 +5,4 @@ from Page_aide import *
 from Page_paramètres import *
 from Page_Profil import *
 from Page_Calendrier import *
-
-ui.run()
+import Layout

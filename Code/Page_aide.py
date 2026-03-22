@@ -1,10 +1,11 @@
 from nicegui import *
 from Layout import *
+import Layout
 
 @ui.page('/aidegénéral')
 
 def aidegénéral(): # Des aides générales pour tout débutant ou juste n'importe qui.
-    designaide("Aide", 300)
+    designaide("Aide", 300, Layout.bgact, Layout.c1act, Layout.c2act, Layout.t1act)
     titre("Général")
     synops("Bienvenue sur notre site web! Si vous vous retrouvez sur cette page, cela veut dire que vous avez besoin d\'une aide de tel sorte. Ainsi, voici une général :")
     with idéequestion(text='Comment est-je accéder à la page aide ?', group='group').style(f'color: #ffffff; background-color: {violetmoyen}; border-radius: 5px; {police3}').classes('w-full text-2xl'):
@@ -18,7 +19,7 @@ def aidegénéral(): # Des aides générales pour tout débutant ou juste n'impo
 
 @ui.page('/aideprofile')
 def aideprofile(): # Explication de comment la page pour le profile et le profile en général fonctionne
-    designaide("Aide", 300)
+    designaide("Aide", 300, Layout.bgact, Layout.c1act, Layout.c2act, Layout.t1act)
     titre("Profile")
     synops("Vous vous demandez comment accéder à votre profil? Comment vous pouviez changer de pseudonyme ou de photo de profile ? Voici tout ce que vous devez savoir :")
     with idéequestion(text='Comment puis-je accéder à mon propre profile ?', group='group').style(f'color: #ffffff; background-color: {violetmoyen}; border-radius: 5px; {police3}').classes('w-full text-2xl'):
@@ -33,7 +34,7 @@ def aideprofile(): # Explication de comment la page pour le profile et le profil
 
 @ui.page('/quinoussommes')
 def quinoussommes(): # Explication de qui on est, ce qu'on fait, et pourquoi le site, etc...
-    designaide("Aide", 300)
+    designaide("Aide", 300, Layout.bgact, Layout.c1act, Layout.c2act, Layout.t1act)
     titre("Qui sommes nous ?")
     synops("Si vous êtes ici, c\'est que vous vous demandiez qui nous étions et quelle importance nous avons dans ce monde, donc voici les réponses à vos questions :")
     with idéequestion(text='Qui sommes nous ?', group='group').style(f'color: #ffffff; background-color: {violetmoyen}; border-radius: 5px; {police3}').classes('w-full text-2xl'):
@@ -56,7 +57,7 @@ def quinoussommes(): # Explication de qui on est, ce qu'on fait, et pourquoi le 
 
 @ui.page('/départ')
 def départ(): # Le déroulement du développement de notre site
-    designaide("Aide", 300)
+    designaide("Aide", 300, Layout.bgact, Layout.c1act, Layout.c2act, Layout.t1act)
     ui.label("Profile").classes('text-4xl font-bold')
     ui.separator()
     ui.label("Vous vous demandez comment accéder à votre profil? Comment vous pouviez changer de pseudonyme ou de photo de profil? Voici ce que vous devez savoir :").classes('text-2xl font-light text-center')
@@ -66,7 +67,7 @@ def départ(): # Le déroulement du développement de notre site
 
 @ui.page('/eastereggpoème')
 def eastereggpoème(): #La page d'un easter que j'ai envie de placer (poèmes ou autres?)
-    designaide("Aide", 300)
+    designaide("Aide", 300, Layout.bgact, Layout.c1act, Layout.c2act, Layout.t1act)
     ui.label("Poème").classes('text-4xl font-bold')
     ui.separator()
     ui.label("Vous vous demandez comment accéder à votre profil? Comment vous pouviez changer de pseudonyme ou de photo de profil? Voici ce que vous devez savoir :").classes('text-2xl font-light text-center')

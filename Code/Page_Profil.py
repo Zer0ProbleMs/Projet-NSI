@@ -1,9 +1,13 @@
 from nicegui import app, ui
 from Layout import *
+import Layout
 
 @ui.page('/profile')
 def Profile():
-    maindesign("Profile", 125)
+    if Layout.theme_sombre:
+        maindesign("Paramètres", 125, bgbleumerfoncé, bleufoncé, bleumer, rouge)
+    else:
+        maindesign("Paramètres", 125, bgrose, violet, violetfoncé, rose)    
     ui.image('Designs/Banniere_Noire.jpg').style('transform: translate(-5%, -25%); top : 50% ; left : 0%').classes('h-100 w-screen')
     ui.image('Designs/Profil_icon.png').style('transform: translate(-50%, -100%); top : 100% ; left : 10%').classes('h-64 w-64')
     ui.label("@pseudo").style('position: absolute; top: 330px; left: 320px').classes('font-bold text-4xl')
