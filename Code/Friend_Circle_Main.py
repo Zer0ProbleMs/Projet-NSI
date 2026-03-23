@@ -43,8 +43,8 @@ def main_page():
                     cal_id = cal['id']
                     snapshot = cal.get('snapshot', '')
 
-                    with ui.card().classes('w-100 h-176').style(f'background-color: {Layout.t1act}; border-radius: 10px; box-shadow: 0px 0px 20px {violetfoncé}; overflow:hidden'):
-                        ui.label(cal['name']).classes('font-bold text-2xl')
+                    with ui.card().classes('w-100 h-176').style(f'background-color: {Layout.t1act}; border-radius: 10px; box-shadow: 0px 0px 20px {Layout.c2act}; overflow:hidden'):
+                        ui.label(cal['name']).style(f'color: {Layout.ctexte}').classes('font-bold text-2xl')
 
                         # ↓ Snapshot preview iframe
                         ui.html(f'''
@@ -124,11 +124,8 @@ def main_page():
         app.storage.general['calendriers'] = [c for c in app.storage.general['calendriers'] if c['id'] != cal_id]
         liste_calendriers.refresh()
 
-    if Layout.theme_sombre:
-        accueildesign("Page d'accueil", 125, bgbleumerfoncé, bleufoncé, bleumer, rouge, len(app.storage.general['calendriers']), on_add=ajouter_calendrier)
-    else:
-        accueildesign("Page d'accueil", 125, bgrose, violet, violetfoncé, rose, len(app.storage.general['calendriers']), on_add=ajouter_calendrier)
-    
+    accueildesign("Accueil", 125, Layout.bgact, Layout.c1act, Layout.c2act, Layout.t1act, len(app.storage.general['calendriers']), on_add=ajouter_calendrier)
+
     liste_calendriers()
 
 ui.run(storage_secret='clé-secrete')

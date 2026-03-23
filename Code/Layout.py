@@ -1,33 +1,26 @@
 from nicegui import app, ui
 bgbleumerfoncé = '<style>body {background-color: #1a1a2e;}</style>'
 bgrose = '<style>body {background-color: #d7a0d7;}</style>'
-bleumer = '#02343f'
-bleumerfoncé = '#1a1a2e'
-bleufoncé = '#16213e'
-bleucyan = '#0f3460'
-rouge = '#e94560'
-beige = '#f0edcc'
-rose = '#d7a0d7'
-rosemoyen = '#d293d2'
-roseclair = '#eeccee'
-violetfoncé = '#8030c0'
-violettrèsfoncé = '#3d0070'
-violetmoyen = '#9037d0'
-violet = '#964be1'
-jaune = '#ffd600'
-blanc = '#ffffff'
-noir = '#000000 '
-police1 = 'font-family: Iosevka Charon'
+bgvertsombre = '<style>body {background-color: #091413;}</style>'
+
+violettrèsfoncé = '#3d0070'; violetfoncé = '#8030c0'; violetmoyen = '#9037d0'; violet = '#964be1'; rosemoyen = '#d293d2'; rose = '#d7a0d7'; roseclair = '#eeccee' # Thème Violet / Rose
+bleumerfoncé = '#1a1a2e'; bleumer = '#02343f'; bleufoncé = '#16213e'; bleucyan = '#0f3460'; rouge = '#e94560' # Thème Bleu / Rouge
+vertsombre = '#091413'; vertfoncé = '#285a48'; vert = '#408a71'; vertclair = '#b0e4cc'
+jaune = '#ffd600' 
+blanc = '#ffffff'; noir = '#000000' # Couleur de texte 
+
+police1 = 'font-family: Iosevka Charon' # Différentes polices d'écritures importé
 police2 = 'font-family: Oswald'
 police3 = 'font-family: Bebas Neue'
 police4 = 'font-family: Bungee'
 police5 = 'font-family: Fredoka'
 
-theme_sombre = False
+theme_sombre = 'violet'
 bgact = bgrose
 c1act = violet
 c2act = violetfoncé
 t1act = rose
+ctexte = noir
 
 def layout(couleurbg, couleursecondaire):
     ui.add_head_html(couleurbg)
@@ -164,13 +157,13 @@ def listeaides(couleurbg, couleurprimaire, couleursecondaire):
     with ui.scroll_area().classes('w-65 h-full'):
         with ui.column().classes('w-full h-full').style(f"transform: translate(-5%); {police3}"):
             with ui.expansion(text='Aides Principales', group='group').style(f'color: white; background-color: {couleursecondaire}; border-radius: 5px').classes('w-full text-xl font-light'):
-                ui.label('- Général').style(f'background-color: {violetmoyen}; border-radius: 5px').classes('cursor-pointer hover:opacity-80 px-2').on('click', lambda: ui.navigate.to('/aidegénéral'))
-                ui.label('- Profile').style(f'background-color: {violetmoyen}; border-radius: 5px').classes('cursor-pointer hover:opacity-80 px-2').on('click', lambda: ui.navigate.to('/aideprofile'))  
+                ui.label('- Général').classes('cursor-pointer hover:opacity-80 px-2').on('click', lambda: ui.navigate.to('/aidegénéral'))
+                ui.label('- Profile').classes('cursor-pointer hover:opacity-80 px-2').on('click', lambda: ui.navigate.to('/aideprofile'))  
             with ui.expansion(text='Notre Parcours', group='group').style(f'color: white; background-color: {couleursecondaire}; border-radius: 5px').classes('w-full text-xl font-light'):
-                ui.label('- Qui sommes nous?').style(f'background-color: {violetmoyen}; border-radius: 5px;').classes('cursor-pointer hover:opacity-80 px-2').on('click', lambda: ui.navigate.to('/quinoussommes'))
-                ui.label('- Le départ').style(f'background-color: {violetmoyen}; border-radius: 5px;').classes('cursor-pointer hover:opacity-80 px-2').on('click', lambda: ui.navigate.to('/départ'))
+                ui.label('- Qui sommes nous?').classes('cursor-pointer hover:opacity-80 px-2').on('click', lambda: ui.navigate.to('/quinoussommes'))
+                ui.label('- Le départ').classes('cursor-pointer hover:opacity-80 px-2').on('click', lambda: ui.navigate.to('/départ'))
             with ui.expansion(text='Easter Egg', group='group').style(f'color: white; background-color: {couleursecondaire}; border-radius: 5px').classes('w-full text-xl font-light'):
-                ui.label('- Poème').style(f'background-color: {violetmoyen}; border-radius: 5px').classes('cursor-pointer hover:opacity-80 px-2').on('click', lambda: ui.navigate.to('/eastereggpoème'))
+                ui.label('- Poème').classes('cursor-pointer hover:opacity-80 px-2').on('click', lambda: ui.navigate.to('/eastereggpoème'))
 
 def friendcirclelogo(gauche, couleursecondaire, teint):
 
