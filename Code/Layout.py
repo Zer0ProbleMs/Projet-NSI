@@ -28,15 +28,22 @@ couleurtexte1 = noir
 couleurtexte2 = blanc
 
 
+
 def layout():
     ui.add_head_html(fond)
     ui.colors(primary=couleurbouton)
     ui.add_head_html('''<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Bungee&family=Fredoka:wght@300..700&family=Iosevka+Charon:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Oswald:wght@200..700&display=swap" rel="stylesheet">''') # Charge la police d'écriture "Barrio"
 
+def musique_de_fond():   
+    bgmusique = ui.audio('Musique/Walk in the Forest v2.mp3', autoplay=True, controls=False, loop=True)
+    with ui.knob(color='orange', track_color='grey', center_color='white', size='4rem',min=0, max=1, step=0.05, value=1, on_change=lambda e: ui.run_javascript(f'document.querySelector("audio").volume = {e.value}')).style(f'position: absolute; left: 50%; top: 45%; transform: translate(-50%, -50%)').props('push glossy'):
+        ui.icon('volume_up')
+    ui.button(on_click=lambda: bgmusique.props('muted'), icon='volume_off').style(f'position: absolute; left: 50%; top: 65%; transform: translate(-50%, -50%)').props('push glossy size=1.5rem')
+    ui.button(on_click=lambda: bgmusique.props(remove='muted'), icon='volume_up').style(f'position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%)').props('push glossy size=1.5rem')
+
 def maindesign(nomdepage, largeurg):
     ui.page_title(nomdepage)
-    layout()   
-    global header, footer, left_drawer, right_drawer
+    layout()
     with ui.header(elevated=True).style(f'background-color: {couleurcontour}; height: 10%').classes('items-center justify-between') as header: # La partie couleurprimairete en haut
         ui.label(nomdepage).style(f'{police4}; position: absolute; top: 50%; left: 10%; transform: translate(-50%, -50%);').classes('text-4xl text-left underline')
         friendcirclelogo("47")
@@ -61,9 +68,12 @@ def maindesign(nomdepage, largeurg):
                     ui.label("Hello").style(f'background-color: {couleurbouton}; color: white').classes('text-2xl py-5 px-25 text-center font-light') # A remplacer par une petite boîte page qui affiche les notifications d'utilisateurs
             ui.icon('chat').classes('cursor-pointer hover:opacity-80').style(f'position: absolute; transform: translate(-50%, -50%); left: 50%; top: 25%; color: white').on('click', lambda: ui.notify("You pressed the messages button")).props('size=5rem')
             ui.icon('contacts').classes('w-16 cursor-pointer hover:opacity-80').style(f'position: absolute; transform: translate(-50%, -50%); left: 50%; top: 35%; color: white').on('click', lambda: menu_amis()).props('size=5rem')
-      
+        musique_de_fond()
+
+
+            
+            
     footer = ui.footer().style(f'background-color: {couleurcontour}') # La partie couleurprimaire en bas
-    return header, footer, left_drawer, right_drawer
 
 def accueildesign(nomdepage, largeurg, ncal, on_add=None):
     ui.page_title(nomdepage)
@@ -94,6 +104,7 @@ def accueildesign(nomdepage, largeurg, ncal, on_add=None):
                     ui.label("Hello").style(f'background-color: {couleurbouton}; color: white').classes('text-2xl py-5 px-25 text-center font-light') # A remplacer par une petite boîte page qui affiche les notifications d'utilisateurs
             ui.icon('chat').classes('cursor-pointer hover:opacity-80').style(f'position: absolute; transform: translate(-50%, -50%); left: 50%; top: 25%; color: white; -webkit-text-stroke: 3px {couleurbouton}').on('click', lambda: ui.notify("You pressed the messages button")).props('size=5rem')
             ui.icon('contacts').classes('w-16 cursor-pointer hover:opacity-80').style(f'position: absolute; transform: translate(-50%, -50%); left: 50%; top: 35%; color: white; -webkit-text-stroke: 3px {couleurbouton}').on('click', lambda: menu_amis()).props('size=5rem')
+            musique_de_fond()
 
     ui.footer().style(f'background-color: {couleurcontour}')         
 
@@ -125,6 +136,7 @@ def designaide(nomdepage, largeurg):
                     ui.label("Hello").style(f'background-color: {couleurbouton}; color: white').classes('text-2xl py-5 px-25 text-center font-light') # A remplacer par une petite boîte page qui affiche les notifications d'utilisateurs
             ui.icon('chat').classes('cursor-pointer hover:opacity-80').style(f'position: absolute; transform: translate(-50%, -50%); left: 50%; top: 25%; color: white; -webkit-text-stroke: 3px {couleurbouton}').on('click', lambda: ui.notify("You pressed the messages button")).props('size=5rem')
             ui.icon('contacts').classes('w-16 cursor-pointer hover:opacity-80').style(f'position: absolute; transform: translate(-50%, -50%); left: 50%; top: 35%; color: white; -webkit-text-stroke: 3px {couleurbouton}').on('click', lambda: menu_amis()).props('size=5rem')
+        musique_de_fond()
 
             #Les boutons notifications et messages se trouverons la!
 
