@@ -5,7 +5,7 @@ import uuid
 """  
 Commande que je préfèrerais ne pas oublier:
 - .style('border-radius: value;')
-- ui.sub.pages({'/': page_function, '/page1': page1_function}) et @ui.page('/')
+- @ui.page('/')
 - La commande "with" qui permet d'ajouter une réponse ou une fonction suivante, comme "with ui.link("lien"):" suivi de "ui.image("image")" qui fait que l'image renvoie à un lien
 - .style('box-shadow: value;') qui permet d'enlever les ombres autour d'un objet et .style('background-color: hex color') qui change le fond d'un objet
 - ui.row() qui est utilisé pour faire une rangée d'items, souvent associé avec ui.menu()
@@ -30,7 +30,7 @@ Ce que je veux pouvoir faire:
 
 
 @ui.page('/')
-def main_page():
+def main_page(): # Fonction de la page principale
 
     if 'calendriers' not in app.storage.general:
         app.storage.general['calendriers'] = []
@@ -43,8 +43,8 @@ def main_page():
                     cal_id = cal['id']
                     snapshot = cal.get('snapshot', '')
 
-                    with ui.card().classes('w-100 h-176').style(f'background-color: {Layout.t1act}; border-radius: 10px; box-shadow: 0px 0px 20px {Layout.c2act}; overflow:hidden'):
-                        ui.label(cal['name']).style(f'color: {Layout.ctexte}').classes('font-bold text-2xl')
+                    with ui.card().classes('w-100 h-176').style(f'background-color: {Layout.couleurcalendrier}; border-radius: 10px; box-shadow: 0px 0px 20px {Layout.couleurcontourlogo}; overflow:hidden;'):
+                        ui.label(cal['name']).style(f'color: {Layout.couleurtexte1}').classes('font-bold text-2xl')
 
                         # ↓ Snapshot preview iframe
                         ui.html(f'''
@@ -77,22 +77,22 @@ def main_page():
         jours = ['L', 'M', 'M', 'J', 'V', 'S', 'D']
         
         header = ''.join(
-            f'<div style="background: {violetfoncé}; color: white; text-align: center; font-size: 10px; padding: 2px; order-radius: 2px">{j}</div>'
+            f'<div style="background: {violetfoncé}; color: {blanc}; text-align: center; font-size: 10px; padding: 2px; order-radius: 2px">{j}</div>'
             for j in jours
         )
         days = ''.join(
-            f'<div style="background: {rose}; color: white; text-align: center; font-size: 10px; padding: 2px; border-radius: 2px">{i}</div>'
+            f'<div style="background: {violet}; color: {blanc}; text-align: center; font-size: 10px; padding: 2px; border-radius: 2px">{i}</div>'
             for i in range(1, 32)
         )
         
-        cell = f'background: {violetfoncé}; color: white; text-align: center; font-size: 10px; padding: 2px; border-radius: 2px'
+        cell = f'background: {violetfoncé}; color: {blanc}; text-align: center; font-size: 10px; padding: 2px; border-radius: 2px'
         grid_style = 'display: grid; grid-template-columns: repeat(7,1fr); gap: 2px; margin-bottom: 6px'
         
         return (
             f'<div style="margin: 0; padding: 8px; background: {rosemoyen}; font-family: sans-serif; overflow: hidden; height: 100%">'
-            f'<div style="font-weight: bold; font-size: 14px; color: {violettrèsfoncé}; margin-bottom: 6px">Aperçu</div>'
+            f'<div style="font-weight: bold; font-size: 14px; color: {violetsombre}; margin-bottom: 6px">Aperçu</div>'
             f'<div style="{grid_style}">{header}{days}</div>'
-            f'<div style="color: {violettrèsfoncé}; font-size: 10px; font-style: italic">Aucun évènement</div>'
+            f'<div style="color: {violetsombre}; font-size: 10px; font-style: italic">Aucun évènement</div>'
             f'</div>'
         )
         
@@ -124,7 +124,7 @@ def main_page():
         app.storage.general['calendriers'] = [c for c in app.storage.general['calendriers'] if c['id'] != cal_id]
         liste_calendriers.refresh()
 
-    accueildesign("Accueil", 125, Layout.bgact, Layout.c1act, Layout.c2act, Layout.t1act, len(app.storage.general['calendriers']), on_add=ajouter_calendrier)
+    accueildesign("Accueil", 125, len(app.storage.general['calendriers']), on_add=ajouter_calendrier)
 
     liste_calendriers()
 

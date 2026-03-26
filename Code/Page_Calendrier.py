@@ -11,9 +11,7 @@ def Page_Calendrier(cal_id: str):
         ui.label('Calendrier introuvable').classes('text-red-500 text-2xl')
         ui.button('Retour', on_click=lambda: ui.navigate.to('/')).style('background-color: #8030c0; color: white')
         return
+    
+    maindesign(cal['name'], 125)
 
-    if Layout.theme_sombre:
-        maindesign(cal['name'], 125, bgbleumerfoncé, bleufoncé, bleumer, rouge)
-    else:
-        maindesign(cal['name'], 125, bgrose, violet, violetfoncé, rose)
 ui.run(storage_secret='clé-secrete')
