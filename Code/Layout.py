@@ -27,7 +27,7 @@ couleurcalendrier = rosemoyen
 couleurtexte1 = noir
 couleurtexte2 = blanc
 
-
+pseudonyme = 'Utilisateur'
 
 def layout():
     ui.add_head_html(fond)
@@ -97,7 +97,7 @@ def accueildesign(nomdepage, largeurg, ncal, on_add=None):
     with ui.right_drawer(top_corner=True, bottom_corner=True).style(f'background-color: {couleurcontour}; width: 50%').props('width=125'):
         with ui.button(on_click= lambda e: on_add() if on_add else ui.notify("Aucune action définie")).props('push glossy').style('position: absolute; border-radius: 50px; transform: translate(-50%, -50%); width: 65%; height: 8.5%; top: 94%; left: 50%'):
             ui.icon('add_circle').style(f'position: absolute; transform: translate(-50%, -50%); top: 50%; left: 50%; width: 50%; color: {fondsecondaire}').props('size=5rem')
-            
+           
         with ui.row().classes('w-full items-center'):
             with ui.icon('notifications').classes('cursor-pointer hover:opacity-80').style(f'position: absolute; transform: translate(-50%, -50%); left: 50%; top: 15%; color: white; -webkit-text-stroke: 3px {couleurbouton}').on('click', lambda: ui.notify("You pressed the notification button")).props('size=5rem'):
                 with ui.menu() as menu:
@@ -117,7 +117,7 @@ def designaide(nomdepage, largeurg):
         friendcirclelogo("45")
         ui.input(placeholder='Rechercher...').style(f'position: absolute; left: 65%; top: 20%; width: 30%; background-color: {couleurbouton}; border-radius: 5px').classes('text-xl')
         
-        with ui.button(on_click= lambda: ui.navigate.to('/profile')).props('push glossy').style('border-radius: 50px; transform: translate(-50%, -50%); width: 4.25%; top: 50%; left: 104.7%'):
+        with ui.button(on_click= lambda: ui.navigate.to('/profile')).props('push glossy').style('border-radius: 50px; transform: translate(-50%, -50%); width: 4.75%; top: 50%; left: 104.7%'):
             ui.icon('account_circle').props('size=4rem').props('size=4rem')
 
     with ui.left_drawer(top_corner=True, bottom_corner=True, elevated=True).style(f'background-color: {couleurcontour}; width: 50%').props(f'width={largeurg}'):
@@ -144,7 +144,9 @@ def designaide(nomdepage, largeurg):
 
 def menus(): # Une fonction qui permet le bon fonctionnement du bouton menu qui se situe dans le coin en haut à gauche
     with ui.menu().style(f'background-color: {couleurbouton}; {police2}; color: white; border-radius: 10px') as menu:
-        ui.label(" Friend Circle +").classes('text-2xl py-5 px-25 text-center text-medium underline')
+        ui.label(pseudonyme).classes('text-2xl py-5 px-25 text-center text-medium')
+        ui.separator().style(f'background-color: {fondsecondaire}')
+        ui.menu_item('Se connecter', on_click=lambda: login()).classes('text-2xl py-5 px-25 text-center font-light')
         ui.separator().style(f'background-color: {fondsecondaire}')
         ui.menu_item('Paramètres', on_click=lambda: ui.navigate.to('/paramètres')).classes('text-2xl py-5 px-25 text-center font-light')
         ui.separator().style(f'background-color: {fondsecondaire}')
@@ -187,3 +189,16 @@ def friendcirclelogo(gauche):
     with ui.label("FRIEND").style(f'{police4}; color: {couleurlogo}; position: absolute; top: 10%; left: {gauche}%; letter-spacing: -8px; -webkit-text-stroke: 2px {couleurcontourlogo}').classes('text-7xl cursor-pointer hover:opacity-80').on('click', lambda: ui.navigate.to(target='/')):
         ui.label("CIRCLE").style(f'{police3}; color: {couleurlogo}; position: absolute; left: 60%; top: 60%; letter-spacing: 1px; -webkit-text-stroke: 1px {couleurcontourlogo}').classes('text-4xl text-bold')
         ui.label("+").style(f'{police4}; color: {jaune}; position: absolute; left: 92%; top: 52%; letter-spacing: 1px; -webkit-text-stroke: 1px {couleurcontourlogo}').classes('text-5xl text-bold')
+        
+def login():
+    global pseudonyme
+    with ui.dialog() as dialog, ui.card():
+        ui.label('Se connecter').classes('font-bold text-xl')
+        pseudonyme = ui.input('Pseudonyme')
+        mdp = ui.input('Mot de passe')
+        with ui.row():
+            ui.button('Annuler', on_click=dialog.close)
+            def sauvegarder():
+                dialog.close()
+            ui.button('Sauvegarder', on_click=sauvegarder).style(f'background-color: {violetfoncé}; color: white')
+    dialog.open()

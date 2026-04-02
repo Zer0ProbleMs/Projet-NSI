@@ -58,12 +58,16 @@ def quinoussommes(): # Explication de qui on est, ce qu'on fait, et pourquoi le 
 @ui.page('/départ')
 def départ(): # Le déroulement du développement de notre site
     designaide("Aide", 300)
-    ui.label("Profile").classes('text-4xl font-bold')
-    ui.separator()
-    ui.label("Vous vous demandez comment accéder à votre profil? Comment vous pouviez changer de pseudonyme ou de photo de profil? Voici ce que vous devez savoir :").classes('text-2xl font-light text-center')
-    ui.separator()
-    ui.label("> La toute première chose à savoir est que vous pouvez facilement accéder à votre profile en appuyant sur l'icone de profile dans le coin en haut à droite de votre écran.").classes('text-xl font-light')
-    ui.label("> Pour changer de pseudonyme, diriger vous sur la section profile et appuyer sur le bouton \"Modifier Profile\", ce qui vous laissera insérer le pseudonyme que vous souhaiter.").classes('text-xl font-light')
+    titre("Départ")
+    synops("On doit tous commencer quelque part lors d'un projet. Nous ? Nous allons essayer de vous montrer comment nous avons travailler sur ce site du mieux que l'on peut.")
+    with idéequestion(text='Quand est-ce que ça a commencé ?', group='group').style(f'color: #ffffff; background-color: {Layout.couleurbouton}; border-radius: 5px; {police3}').classes('w-full text-2xl'):
+        idéesynops("Il y a un début à tout, et même si on ne connais plus la date l'idée est la :")
+        idée("Nous avons début notre projet au alentours de la fin de 2025, ce qui, selon de si vous venez du futur, que vous êtes dans le futur ou autre,  peux paraître être il y a longtemps.")
+        idée("Nous n'avions pas beaucoup de compétences (pas grand choses n'as changé entre temps), mais nous étions quand même motivé par l'idée de faire un site pour notre projet, j'étais personnellement motivé par l'idée d'apprendre plus en détail Python et son fonctionnement dans un projet complet, mais également les autres langages qui l'accompagnaient comme HTML et CSS ainsi que la bibliothèque NiceGui")       
+    with idéequestion(text='Comment puis-je accéder à d\'autres pages ?', group='group').style(f'color: #ffffff; background-color: {Layout.couleurbouton}; border-radius: 5px; {police3}').classes('w-full text-2xl'):
+        idéesynops("Le système d\'accès à d\'autres pages est très intuitifs. Egalement, les autres \"aides\", pour les pages spécifiques, vous indiquerons également comment accéder à ces mêmes pages. Cependant, voici comment accéder aux pages principales :")
+        idée("Page Aide : Pour accéder à la page aide, il vous faut simplement appuyer sur le point d\'interrogation dans le coin en bas à droite de la page.")
+        idée("Page Paramètre : Vous pouvez accéder à vos paramètres en allant dans le menu qui se situe dans le coin en haut à droite de la page, vous y trouverez le bouton \"paramètres\" qui vous mènera directement aux paramètres.")
 
 @ui.page('/eastereggpoème')
 def eastereggpoème(): #La page d'un easter que j'ai envie de placer (poèmes ou autres?)
