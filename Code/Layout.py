@@ -148,7 +148,7 @@ def menus(): # Une fonction qui permet le bon fonctionnement du bouton menu qui 
         ui.separator().style(f'background-color: {fondsecondaire}')
         ui.menu_item('Se connecter', on_click=lambda: login()).classes('text-2xl py-5 px-25 text-center font-light')
         ui.separator().style(f'background-color: {fondsecondaire}')
-        ui.menu_item('Paramètres', on_click=lambda: ui.navigate.to('/paramètres')).classes('text-2xl py-5 px-25 text-center font-light')
+        ui.menu_item('Paramètres', on_click=lambda: ui.navigate.to('/parametres')).classes('text-2xl py-5 px-25 text-center font-light')
         ui.separator().style(f'background-color: {fondsecondaire}')
         ui.menu_item('Fermer', menu.close).classes('text-2xl py-5 px-25 text-center font-light')
 

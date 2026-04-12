@@ -2,19 +2,32 @@ from nicegui import app, ui
 from Layout import *
 import Layout
 import Friend_Circle_Main as fcm
+from Database import *
 
-@ui.page('/paramètres')
-def paramètres():
+@ui.page('/parametres')
+def parametres():
+
     maindesign("Paramètres", 125)
-    modification()
-    switch()
-    
-def modification():
-    ui.label("> Modifier le profile").style(f'{police3}; color: {Layout.couleurtexte1}').classes('font-extrabold text-6xl')
-    ui.input('Pseudonyme', validation=lambda value: 'Too short' if len(value) < 5 else None).style(f'background-color: {Layout.couleurbouton}; border-radius: 10px').classes('px-5')
-    ui.input(label='Mot De Passe', placeholder='mot de passe',
-        validation={'Input too long': lambda value: len(value) < 20}).style(f'background-color: {Layout.couleurbouton}; border-radius: 10px').classes('px-5')
-    result = ui.label()
+
+    config = load_config()
+    user = config[USER_ID]
+
+    ui.label('PARAMÈTRES').classes('text-3xl font-bold')
+
+    name = ui.input('Pseudo', value=user['username'])
+    password = ui.input('Mot de passe', value=user['password'], password=True)
+    bio = ui.textarea('Bio', value=user['bio'])
+
+    def save():
+        config[USER_ID]['username'] = name.value
+        config[USER_ID]['password'] = password.value
+        config[USER_ID]['bio'] = bio.value
+
+        save_config(config)
+        ui.notify('Sauvegardé !')
+
+    ui.button('Sauvegarder', on_click=save)
+    ui.button('Retour', on_click=lambda: ui.navigate.to('/profile'))
 
 def changer_theme(e): # C'est ici qu'on insère les thèmes qu'on veut
     global theme_sombre
@@ -58,4 +71,3 @@ def switch(): # La fonction qui permet au bouton de fonctionner
         value=Layout.theme_sombre,  
         on_change=changer_theme
     ).style(f'background-color: {Layout.couleurbouton}; border-radius: 10px').classes('px-2').props('push')
-ui.run()

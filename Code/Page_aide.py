@@ -15,7 +15,7 @@ def aidegénéral(): # Des aides générales pour tout débutant ou juste n'impo
     with idéequestion(text='Comment puis-je accéder à d\'autres pages ?', group='group').style(f'color: #ffffff; background-color: {Layout.couleurbouton}; border-radius: 5px; {police3}').classes('w-full text-2xl'):
         idéesynops("Le système d\'accès à d\'autres pages est très intuitifs. Egalement, les autres \"aides\", pour les pages spécifiques, vous indiquerons également comment accéder à ces mêmes pages. Cependant, voici comment accéder aux pages principales :")
         idée("Page Aide : Pour accéder à la page aide, il vous faut simplement appuyer sur le point d\'interrogation dans le coin en bas à droite de la page.")
-        idée("Page Paramètre : Vous pouvez accéder à vos paramètres en allant dans le menu qui se situe dans le coin en haut à droite de la page, vous y trouverez le bouton \"paramètres\" qui vous mènera directement aux paramètres.")
+        idée("Page Paramètre : Vous pouvez accéder à vos paramètres en allant dans le menu qui se situe dans le coin en haut à droite de la page, vous y trouverez le bouton \"parametres\" qui vous mènera directement aux paramètres.")
 
 @ui.page('/aideprofile')
 def aideprofile(): # Explication de comment la page pour le profile et le profile en général fonctionne
@@ -67,7 +67,7 @@ def départ(): # Le déroulement du développement de notre site
     with idéequestion(text='Comment puis-je accéder à d\'autres pages ?', group='group').style(f'color: #ffffff; background-color: {Layout.couleurbouton}; border-radius: 5px; {police3}').classes('w-full text-2xl'):
         idéesynops("Le système d\'accès à d\'autres pages est très intuitifs. Egalement, les autres \"aides\", pour les pages spécifiques, vous indiquerons également comment accéder à ces mêmes pages. Cependant, voici comment accéder aux pages principales :")
         idée("Page Aide : Pour accéder à la page aide, il vous faut simplement appuyer sur le point d\'interrogation dans le coin en bas à droite de la page.")
-        idée("Page Paramètre : Vous pouvez accéder à vos paramètres en allant dans le menu qui se situe dans le coin en haut à droite de la page, vous y trouverez le bouton \"paramètres\" qui vous mènera directement aux paramètres.")
+        idée("Page Paramètre : Vous pouvez accéder à vos paramètres en allant dans le menu qui se situe dans le coin en haut à droite de la page, vous y trouverez le bouton \"parametres\" qui vous mènera directement aux paramètres.")
 
 @ui.page('/eastereggpoème')
 def eastereggpoème(): #La page d'un easter que j'ai envie de placer (poèmes ou autres?)
@@ -96,5 +96,3 @@ def idéesynops(texte): # Pas obligatoire, mais pareil que le synops principal, 
 
 def idée(texte): # Explication compréhensible des réponses au questions
     ui.label("> " + texte).classes('text-xl font-light').style(f'{police1}')
-
-ui.run()
