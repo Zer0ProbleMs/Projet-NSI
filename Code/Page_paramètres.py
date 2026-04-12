@@ -6,7 +6,6 @@ from Database import *
 
 @ui.page('/parametres')
 def parametres():
-
     maindesign("Paramètres", 125)
 
     config = load_config()
@@ -28,6 +27,7 @@ def parametres():
 
     ui.button('Sauvegarder', on_click=save)
     ui.button('Retour', on_click=lambda: ui.navigate.to('/profile'))
+    switch()
 
 def changer_theme(e): # C'est ici qu'on insère les thèmes qu'on veut
     global theme_sombre
