@@ -16,11 +16,14 @@ def parametres():
     name = ui.input('Pseudo', value=user['username'])
     password = ui.input('Mot de passe', value=user['password'], password=True)
     bio = ui.textarea('Bio', value=user['bio'])
+    pic = ui.input('', valure=user ['profile_pic'])
 
     def save():
         config[USER_ID]['username'] = name.value
         config[USER_ID]['password'] = password.value
         config[USER_ID]['bio'] = bio.value
+        config[USER_ID]['profile_pic'] = pic.value
+        
 
         save_config(config)
         ui.notify('Sauvegardé !')
