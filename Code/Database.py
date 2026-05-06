@@ -2,7 +2,7 @@ import configparser
 import os
 
 FILE = os.path.join(os.path.dirname(__file__), "users.ini")
-USER_ID = "user_1"
+USER_ID = "user_0"
 
 
 def load_config():
