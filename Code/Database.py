@@ -36,3 +36,11 @@ def require_login(func):
             return
         return func(*args, **kwargs)
     return wrapper
+
+def get_amis(user_id):
+    config = load_config()
+
+    return [
+        uid for uid in config.sections()
+        if uid.startswith("user_") and uid != user_id
+    ]

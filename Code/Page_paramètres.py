@@ -15,7 +15,7 @@ def parametres():
     ui.label('PARAMÈTRES').classes('text-3xl font-bold')
 
     name = ui.input('Pseudo', value=user['username'])
-    password = ui.input('Mot de passe', value=user['password'], password=True)
+    password = ui.input('Mot de passe', value=user['password'], password=True, password_toggle_button=True)
     bio = ui.textarea('Bio', value=user['bio'])
 
 
