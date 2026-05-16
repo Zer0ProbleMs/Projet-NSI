@@ -8,27 +8,31 @@ from Database import *
 def parametres():
     maindesign("Paramètres", 125)
 
+    user_id = app.storage.user['user_id']  # ← plus de USER_ID fixe
     config = load_config()
-    user = config[USER_ID]
-
+    
+    user = config[user_id]
     ui.label('PARAMÈTRES').classes('text-3xl font-bold')
 
     name = ui.input('Pseudo', value=user['username'])
     password = ui.input('Mot de passe', value=user['password'], password=True)
     bio = ui.textarea('Bio', value=user['bio'])
 
+
     def save():
-        config[USER_ID]['username'] = name.value
-        config[USER_ID]['password'] = password.value
-        config[USER_ID]['bio'] = bio.value
-        
+        user_id = app.storage.user['user_id']  # ← récupère l'id de la session
+        config[user_id]['username'] = name.value
+        config[user_id]['password'] = password.value
+        config[user_id]['bio'] = bio.value
 
         save_config(config)
-        ui.notify('Sauvegardé !')
-
+        
+    switch()
+    ui.notify('Sauvegardé !')
     ui.button('Sauvegarder', on_click=save)
     ui.button('Retour', on_click=lambda: ui.navigate.to('/profile'))
-    switch()
+    ui.button('Se déconnecter', on_click=lambda: ui.navigate.to('/logout')).style('color: red')
+    
 
 def changer_theme(e): # C'est ici qu'on insère les thèmes qu'on veut
     global theme_sombre

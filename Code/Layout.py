@@ -146,31 +146,37 @@ def menus(): # Une fonction qui permet le bon fonctionnement du bouton menu qui 
     with ui.menu().style(f'background-color: {couleurbouton}; {police2}; color: white; border-radius: 10px') as menu:
         ui.label(pseudonyme).classes('text-2xl py-5 px-25 text-center text-medium')
         ui.separator().style(f'background-color: {fondsecondaire}')
-        ui.menu_item('Se connecter', on_click=lambda: login()).classes('text-2xl py-5 px-25 text-center font-light')
-        ui.separator().style(f'background-color: {fondsecondaire}')
         ui.menu_item('Paramètres', on_click=lambda: ui.navigate.to('/parametres')).classes('text-2xl py-5 px-25 text-center font-light')
         ui.separator().style(f'background-color: {fondsecondaire}')
         ui.menu_item('Fermer', menu.close).classes('text-2xl py-5 px-25 text-center font-light')
 
-def menu_amis(): # Une fonction qui permet le bon fonctionnement du bouton contacts
-        with ui.menu().style('transform: translate(-30%, 65%); width: 20%') as menu:
-            ui.label("Amis").style(f'background-color: {couleurcontour}; color: white; {police3}').classes('text-3xl py-5 px-25 text-center font-light')
-            ui.separator().style(f'background-color: {couleurcontour}')
-            amis = ["Daris", "Tidianne", "Anfel", "Cat"]
-            ui.input(placeholder='Rechercher...', autocomplete=amis).style(f'width: 100%; background-color: {couleurcontour}; {police5}')
-            for ami in amis:
-                with ui.row().classes('items-center gap-2 p-2').style(f'background-color: {couleurbouton}'):
-                    with ui.slide_item().style(f'background-color: {fondsecondaire}; color: {couleurtexte2}; border-radius: 3px; width: 100%; height: 100%') as slide_item:
-                        with ui.item():
-                            with ui.item_section().props('avatar'):
-                                ui.icon('person')
-                            with ui.item_section():
-                                ui.item_label(ami).style(f'{police5}')
-                            with slide_item.right():
-                                with ui.item(on_click=slide_item.reset):
-                                    ui.item_section('Supprimer?')
-                                    with ui.item_section().props('avatar'):
-                                        ui.icon('delete')
+def menu_amis():
+    from Database import load_config, get_all_user_ids
+    
+    config = load_config()
+    
+    # Récupère tous les users sauf soi-même
+    mon_id = app.storage.user.get('user_id', '')
+    amis = [(uid, config[uid].get('username', '?')) for uid in get_all_user_ids() if uid != mon_id]
+    noms = [nom for _, nom in amis]
+
+    with ui.menu().style('transform: translate(-30%, 65%); width: 20%') as menu:
+        ui.label("Amis").style(f'background-color: {couleurcontour}; color: white; {police3}').classes('text-3xl py-5 px-25 text-center font-light')
+        ui.separator().style(f'background-color: {couleurcontour}')
+        ui.input(placeholder='Rechercher...', autocomplete=noms).style(f'width: 100%; background-color: {couleurcontour}; {police5}')
+        
+        for uid, nom in amis:
+            with ui.slide_item().style(f'background-color: {fondsecondaire}; color: {couleurtexte2}; border-radius: 3px; width: 100%; height: 100%') as slide_item:
+                with ui.item(on_click=lambda u=uid: ui.navigate.to(f'/profil/{u}')):  # ← clique → profil
+                    with ui.item_section().props('avatar'):
+                        ui.icon('person')
+                    with ui.item_section():
+                        ui.item_label(nom).style(f'{police5}')
+                with slide_item.right():
+                    with ui.item(on_click=slide_item.reset):
+                        ui.item_section('Supprimer?')
+                        with ui.item_section().props('avatar'):
+                            ui.icon('delete')
 
 def listeaides():
     with ui.scroll_area().classes('w-65 h-full'):
