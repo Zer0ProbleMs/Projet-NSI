@@ -15,7 +15,7 @@ def aidegénéral(): # Des aides générales pour tout débutant ou juste n'impo
     with idéequestion(text='Comment puis-je accéder à d\'autres pages ?', group='group').style(f'color: #ffffff; background-color: {Layout.couleurbouton}; border-radius: 5px; {police3}').classes('w-full text-2xl'):
         idéesynops("Le système d\'accès à d\'autres pages est très intuitifs. Egalement, les autres \"aides\", pour les pages spécifiques, vous indiquerons également comment accéder à ces mêmes pages. Cependant, voici comment accéder aux pages principales :")
         idée("Page Aide : Pour accéder à la page aide, il vous faut simplement appuyer sur le point d\'interrogation dans le coin en bas à droite de la page.")
-        idée("Page Paramètre : Vous pouvez accéder à vos paramètres en allant dans le menu qui se situe dans le coin en haut à droite de la page, vous y trouverez le bouton \"parametres\" qui vous mènera directement aux paramètres.")
+        idée("Page Paramètre : Vous pouvez accéder à vos paramètres en allant dans le menu qui se situe dans le coin en haut à droite de la page, vous y trouverez le bouton \"paramètres\" qui vous mènera directement aux paramètres.")
 
 @ui.page('/aideprofile')
 def aideprofile(): # Explication de comment la page pour le profile et le profile en général fonctionne
@@ -63,11 +63,11 @@ def départ(): # Le déroulement du développement de notre site
     with idéequestion(text='Quand est-ce que ça a commencé ?', group='group').style(f'color: #ffffff; background-color: {Layout.couleurbouton}; border-radius: 5px; {police3}').classes('w-full text-2xl'):
         idéesynops("Il y a un début à tout, et même si on ne connais plus la date l'idée est la :")
         idée("Nous avons début notre projet au alentours de la fin de 2025, ce qui, selon de si vous venez du futur, que vous êtes dans le futur ou autre,  peux paraître être il y a longtemps.")
-        idée("Nous n'avions pas beaucoup de compétences (pas grand choses n'as changé entre temps), mais nous étions quand même motivé par l'idée de faire un site pour notre projet, j'étais personnellement motivé par l'idée d'apprendre plus en détail Python et son fonctionnement dans un projet complet, mais également les autres langages qui l'accompagnaient comme HTML et CSS ainsi que la bibliothèque NiceGui")       
+        idée("Nous n'avions pas beaucoup de compétences (pas grand choses n'as changé entre temps), mais nous étions quand même motivé par l'idée de faire un site pour notre projet, j'étais personnellement motivé par l'idée d'apprendre plus en détail Python et son fonctionnement dans un projet complet, mais également les autres langages qui l'accompagnaient comme HTML et CSS ainsi que la bibliothèque NiceGui.")
     with idéequestion(text='Comment puis-je accéder à d\'autres pages ?', group='group').style(f'color: #ffffff; background-color: {Layout.couleurbouton}; border-radius: 5px; {police3}').classes('w-full text-2xl'):
         idéesynops("Le système d\'accès à d\'autres pages est très intuitifs. Egalement, les autres \"aides\", pour les pages spécifiques, vous indiquerons également comment accéder à ces mêmes pages. Cependant, voici comment accéder aux pages principales :")
         idée("Page Aide : Pour accéder à la page aide, il vous faut simplement appuyer sur le point d\'interrogation dans le coin en bas à droite de la page.")
-        idée("Page Paramètre : Vous pouvez accéder à vos paramètres en allant dans le menu qui se situe dans le coin en haut à droite de la page, vous y trouverez le bouton \"parametres\" qui vous mènera directement aux paramètres.")
+        idée("Page Paramètre : Vous pouvez accéder à vos paramètres en allant dans le menu qui se situe dans le coin en haut à droite de la page, vous y trouverez le bouton \"paramètres\" qui vous mènera directement aux paramètres.")
 
 @ui.page('/eastereggpoème')
 def eastereggpoème(): #La page d'un easter que j'ai envie de placer (poèmes ou autres?)
@@ -96,3 +96,5 @@ def idéesynops(texte): # Pas obligatoire, mais pareil que le synops principal, 
 
 def idée(texte): # Explication compréhensible des réponses au questions
     ui.label("> " + texte).classes('text-xl font-light').style(f'{police1}')
+
+ui.run()

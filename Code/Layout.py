@@ -1,4 +1,7 @@
 from nicegui import app, ui
+from Database import *
+from Login import *
+
 bgrose = '<style>body {background-color: #d7a0d7;}</style>'
 bgvertsombre = '<style>body {background-color: #244237;}</style>'
 bgblanc2 = '<style>body {background-color: #f0dbdb;}</style>'
@@ -27,7 +30,12 @@ couleurcalendrier = rosemoyen
 couleurtexte1 = noir
 couleurtexte2 = blanc
 
-pseudonyme = 'Utilisateur'
+user_id = app.storage.user['user_id']
+config = load_config()
+user = config[user_id]
+username = user.get("username")
+
+
 
 def layout():
     ui.add_head_html(fond)
@@ -102,7 +110,7 @@ def accueildesign(nomdepage, largeurg, ncal, on_add=None):
             with ui.icon('notifications').classes('cursor-pointer hover:opacity-80').style(f'position: absolute; transform: translate(-50%, -50%); left: 50%; top: 15%; color: white; -webkit-text-stroke: 3px {couleurbouton}').on('click', lambda: ui.notify("You pressed the notification button")).props('size=5rem'):
                 with ui.menu() as menu:
                     ui.label("Hello").style(f'background-color: {couleurbouton}; color: white').classes('text-2xl py-5 px-25 text-center font-light') # A remplacer par une petite boîte page qui affiche les notifications d'utilisateurs
-            ui.icon('chat').classes('cursor-pointer hover:opacity-80').style(f'position: absolute; transform: translate(-50%, -50%); left: 50%; top: 25%; color: white; -webkit-text-stroke: 3px {couleurbouton}').on('click', lambda: ui.notify("You pressed the messages button")).props('size=5rem')
+            ui.icon('chat').classes('cursor-pointer hover:opacity-80').style(f'position: absolute; transform: translate(-50%, -50%); left: 50%; top: 25%; color: white; -webkit-text-stroke: 3px {couleurbouton}').on('click', lambda: messagerie()).props('size=5rem')
             ui.icon('contacts').classes('w-16 cursor-pointer hover:opacity-80').style(f'position: absolute; transform: translate(-50%, -50%); left: 50%; top: 35%; color: white; -webkit-text-stroke: 3px {couleurbouton}').on('click', lambda: menu_amis()).props('size=5rem')
             musique_de_fond()
 
@@ -144,7 +152,7 @@ def designaide(nomdepage, largeurg):
 
 def menus(): # Une fonction qui permet le bon fonctionnement du bouton menu qui se situe dans le coin en haut à gauche
     with ui.menu().style(f'background-color: {couleurbouton}; {police2}; color: white; border-radius: 10px') as menu:
-        ui.label(pseudonyme).classes('text-2xl py-5 px-25 text-center text-medium')
+        ui.label(username).classes('text-2xl py-5 px-25 text-center text-medium')
         ui.separator().style(f'background-color: {fondsecondaire}')
         ui.menu_item('Paramètres', on_click=lambda: ui.navigate.to('/parametres')).classes('text-2xl py-5 px-25 text-center font-light')
         ui.separator().style(f'background-color: {fondsecondaire}')
@@ -178,6 +186,35 @@ def menu_amis():
                         with ui.item_section().props('avatar'):
                             ui.icon('delete')
 
+def menu_amis():
+    from Database import load_config, get_all_user_ids
+    
+    config = load_config()
+    
+    # Récupère tous les users sauf soi-même
+    mon_id = app.storage.user.get('user_id', '')
+    amis = [(uid, config[uid].get('username', '?')) for uid in get_all_user_ids() if uid != mon_id]
+    noms = [nom for _, nom in amis]
+
+    with ui.menu().style('transform: translate(-30%, 65%); width: 20%') as menu:
+        ui.label("Amis").style(f'background-color: {couleurcontour}; color: white; {police3}').classes('text-3xl py-5 px-25 text-center font-light')
+        ui.separator().style(f'background-color: {couleurcontour}')
+        ui.input(placeholder='Rechercher...', autocomplete=noms).style(f'width: 100%; background-color: {couleurcontour}; {police5}')
+        
+        for uid, nom in amis:
+            with ui.slide_item().style(f'background-color: {fondsecondaire}; color: {couleurtexte2}; border-radius: 3px; width: 100%; height: 100%') as slide_item:
+                with ui.item(on_click=lambda u=uid: ui.navigate.to(f'/profil/{u}')):  # ← clique → profil
+                    with ui.item_section().props('avatar'):
+                        ui.icon('person')
+                    with ui.item_section():
+                        ui.item_label(nom).style(f'{police5}')
+                with slide_item.right():
+                    with ui.item(on_click=slide_item.reset):
+                        ui.item_section('Supprimer?')
+                        with ui.item_section().props('avatar'):
+                            ui.icon('delete')
+
+                                
 def listeaides():
     with ui.scroll_area().classes('w-65 h-full'):
         with ui.column().classes('w-full h-full').style(f"transform: translate(-5%); {police3}"):
@@ -197,14 +234,23 @@ def friendcirclelogo(gauche):
         ui.label("+").style(f'{police4}; color: {jaune}; position: absolute; left: 92%; top: 52%; letter-spacing: 1px; -webkit-text-stroke: 1px {couleurcontourlogo}').classes('text-5xl text-bold')
         
 def login():
-    global pseudonyme
+    global username
+    global password
     with ui.dialog() as dialog, ui.card():
         ui.label('Se connecter').classes('font-bold text-xl')
-        pseudonyme = ui.input('Pseudonyme')
-        mdp = ui.input('Mot de passe')
+        username = ui.input('Pseudonyme')
+        password = ui.input('Mot de passe')
         with ui.row():
             ui.button('Annuler', on_click=dialog.close)
             def sauvegarder():
                 dialog.close()
             ui.button('Sauvegarder', on_click=sauvegarder).style(f'background-color: {violetfoncé}; color: white')
     dialog.open()
+    
+def messagerie():
+    with ui.menu().style(f'transform: translate(-30%, 65%); width: 20%; background-color: {couleurcontour}') as menu:
+        for ami in amis:
+            with ui.card().style(f'background-color: {fondsecondaire}'):
+                with ui.column():
+                    ui.label(ami)
+        return
