@@ -1,4 +1,6 @@
 from nicegui import app, ui
+from Database import load_config, USER_ID
+
 bgrose = '<style>body {background-color: #d7a0d7;}</style>'
 bgvertsombre = '<style>body {background-color: #244237;}</style>'
 bgblanc2 = '<style>body {background-color: #f0dbdb;}</style>'
@@ -27,7 +29,12 @@ couleurcalendrier = rosemoyen
 couleurtexte1 = noir
 couleurtexte2 = blanc
 
-pseudonyme = 'Utilisateur'
+config = load_config()
+user = config[USER_ID]
+
+username = user.get("username")
+
+amis = ["Daris", "Tidianne", "Anfel", "Cat"]
 
 def layout():
     ui.add_head_html(fond)
@@ -102,7 +109,7 @@ def accueildesign(nomdepage, largeurg, ncal, on_add=None):
             with ui.icon('notifications').classes('cursor-pointer hover:opacity-80').style(f'position: absolute; transform: translate(-50%, -50%); left: 50%; top: 15%; color: white; -webkit-text-stroke: 3px {couleurbouton}').on('click', lambda: ui.notify("You pressed the notification button")).props('size=5rem'):
                 with ui.menu() as menu:
                     ui.label("Hello").style(f'background-color: {couleurbouton}; color: white').classes('text-2xl py-5 px-25 text-center font-light') # A remplacer par une petite boîte page qui affiche les notifications d'utilisateurs
-            ui.icon('chat').classes('cursor-pointer hover:opacity-80').style(f'position: absolute; transform: translate(-50%, -50%); left: 50%; top: 25%; color: white; -webkit-text-stroke: 3px {couleurbouton}').on('click', lambda: ui.notify("You pressed the messages button")).props('size=5rem')
+            ui.icon('chat').classes('cursor-pointer hover:opacity-80').style(f'position: absolute; transform: translate(-50%, -50%); left: 50%; top: 25%; color: white; -webkit-text-stroke: 3px {couleurbouton}').on('click', lambda: messagerie()).props('size=5rem')
             ui.icon('contacts').classes('w-16 cursor-pointer hover:opacity-80').style(f'position: absolute; transform: translate(-50%, -50%); left: 50%; top: 35%; color: white; -webkit-text-stroke: 3px {couleurbouton}').on('click', lambda: menu_amis()).props('size=5rem')
             musique_de_fond()
 
@@ -144,7 +151,7 @@ def designaide(nomdepage, largeurg):
 
 def menus(): # Une fonction qui permet le bon fonctionnement du bouton menu qui se situe dans le coin en haut à gauche
     with ui.menu().style(f'background-color: {couleurbouton}; {police2}; color: white; border-radius: 10px') as menu:
-        ui.label(pseudonyme).classes('text-2xl py-5 px-25 text-center text-medium')
+        ui.label(username).classes('text-2xl py-5 px-25 text-center text-medium')
         ui.separator().style(f'background-color: {fondsecondaire}')
         ui.menu_item('Se connecter', on_click=lambda: login()).classes('text-2xl py-5 px-25 text-center font-light')
         ui.separator().style(f'background-color: {fondsecondaire}')
@@ -156,22 +163,40 @@ def menu_amis(): # Une fonction qui permet le bon fonctionnement du bouton conta
         with ui.menu().style('transform: translate(-30%, 65%); width: 20%') as menu:
             ui.label("Amis").style(f'background-color: {couleurcontour}; color: white; {police3}').classes('text-3xl py-5 px-25 text-center font-light')
             ui.separator().style(f'background-color: {couleurcontour}')
-            amis = ["Daris", "Tidianne", "Anfel", "Cat"]
             ui.input(placeholder='Rechercher...', autocomplete=amis).style(f'width: 100%; background-color: {couleurcontour}; {police5}')
             for ami in amis:
-                with ui.row().classes('items-center gap-2 p-2').style(f'background-color: {couleurbouton}'):
-                    with ui.slide_item().style(f'background-color: {fondsecondaire}; color: {couleurtexte2}; border-radius: 3px; width: 100%; height: 100%') as slide_item:
-                        with ui.item():
-                            with ui.item_section().props('avatar'):
-                                ui.icon('person')
-                            with ui.item_section():
-                                ui.item_label(ami).style(f'{police5}')
-                            with slide_item.right():
-                                with ui.item(on_click=slide_item.reset):
-                                    ui.item_section('Supprimer?')
-                                    with ui.item_section().props('avatar'):
-                                        ui.icon('delete')
-
+                with ui.slide_item().style(f'background-color: {fondsecondaire}; color: {couleurtexte2}; border-radius: 3px; width: 100%; height: 100%') as slide_item:
+                                
+                    with ui.card().style(f'background: #c084fc22; border: 1px solid {couleurcontour}; padding: 16px 20px; width: 100%; cursor: pointer;'):
+                        with ui.row().classes('items-center gap-4 w-full'):
+                            ui.label(ami[0]).style(f'width: 46px; height: 46px; border-radius: 50%; background: {couleurcontour}; color: {couleurtexte2}; font-size: 18px; display: flex; align-items: center; justify-content: center')
+                            with ui.column().classes('gap-0'):
+                                ui.label(ami).style(f'font-weight: 500; color: {couleurtexte2}; {police5}')
+                                ui.label('En ligne').style('font-size: 12px; color: #7e22ce')
+                            ui.element('div').style('width: 8px; height: 8px; border-radius: 50%; background: #22c55e; margin-left: auto')
+                            
+                    with slide_item.right(): # Permet de faire glisser l'item vers la gauche et y afficher des options
+                        with ui.row().classes():
+                            with ui.item(on_click=slide_item.reset): # La partie pour retourner en arrière
+                                with ui.item_section().props('avatar'):
+                                    ui.icon('arrow_back_ios')
+                                ui.item_section('Annuler').style('transform: translate(-50%, 0%)')
+                            with ui.item(on_click=slide_item.delete): # Permet de supprimer une des bulles
+                                ui.item_section('Supprimer?').style('transform: translate(35%, 0%)')
+                                with ui.item_section().props('avatar'):
+                                    ui.icon('delete')
+                                    
+                    with slide_item.left(): # Permet de faire glisser l'item vers la droite et y afficher des options
+                        with ui.row().classes():
+                            with ui.item(on_click=slide_item.reset):
+                                ui.item_section('Envoyer Message').style('transform: translate(20%, 0%)') # Permet de renvoyer l'utilisateur au menu message
+                                with ui.item_section().props('avatar'):
+                                    ui.icon('sms')
+                            with ui.item(on_click=slide_item.reset): # La partie pour retourner en arrière
+                                with ui.item_section().props('avatar'):
+                                    ui.icon('arrow_back_ios')
+                                ui.item_section('Annuler').style('transform: translate(-50%, 0%)')
+                                
 def listeaides():
     with ui.scroll_area().classes('w-65 h-full'):
         with ui.column().classes('w-full h-full').style(f"transform: translate(-5%); {police3}"):
@@ -191,14 +216,23 @@ def friendcirclelogo(gauche):
         ui.label("+").style(f'{police4}; color: {jaune}; position: absolute; left: 92%; top: 52%; letter-spacing: 1px; -webkit-text-stroke: 1px {couleurcontourlogo}').classes('text-5xl text-bold')
         
 def login():
-    global pseudonyme
+    global username
+    global password
     with ui.dialog() as dialog, ui.card():
         ui.label('Se connecter').classes('font-bold text-xl')
-        pseudonyme = ui.input('Pseudonyme')
-        mdp = ui.input('Mot de passe')
+        username = ui.input('Pseudonyme')
+        password = ui.input('Mot de passe')
         with ui.row():
             ui.button('Annuler', on_click=dialog.close)
             def sauvegarder():
                 dialog.close()
             ui.button('Sauvegarder', on_click=sauvegarder).style(f'background-color: {violetfoncé}; color: white')
     dialog.open()
+    
+def messagerie():
+    with ui.menu().style(f'transform: translate(-30%, 65%); width: 20%; background-color: {couleurcontour}') as menu:
+        for ami in amis:
+            with ui.card().style(f'background-color: {fondsecondaire}'):
+                with ui.column():
+                    ui.label(ami)
+        return
