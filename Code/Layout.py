@@ -30,12 +30,6 @@ couleurcalendrier = rosemoyen
 couleurtexte1 = noir
 couleurtexte2 = blanc
 
-user_id = app.storage.user['user_id']
-config = load_config()
-user = config[user_id]
-username = user.get("username")
-
-
 
 def layout():
     ui.add_head_html(fond)
@@ -150,9 +144,13 @@ def designaide(nomdepage, largeurg):
 
     ui.footer().style(f'background-color: {couleurcontour}')
 
-def menus(): # Une fonction qui permet le bon fonctionnement du bouton menu qui se situe dans le coin en haut à gauche
+def menus():
+    user_id = app.storage.user.get('user_id', '')
+    config = load_config()
+    pseudo = config[user_id].get('username', 'Utilisateur') if user_id and user_id in config else 'Utilisateur'
+    
     with ui.menu().style(f'background-color: {couleurbouton}; {police2}; color: white; border-radius: 10px') as menu:
-        ui.label(username).classes('text-2xl py-5 px-25 text-center text-medium')
+        ui.label(pseudo).classes('text-2xl py-5 px-25 text-center text-medium')
         ui.separator().style(f'background-color: {fondsecondaire}')
         ui.menu_item('Paramètres', on_click=lambda: ui.navigate.to('/parametres')).classes('text-2xl py-5 px-25 text-center font-light')
         ui.separator().style(f'background-color: {fondsecondaire}')

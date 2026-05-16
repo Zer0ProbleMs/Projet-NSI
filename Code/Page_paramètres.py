@@ -26,11 +26,11 @@ def parametres():
         config[user_id]['bio'] = bio.value
 
         save_config(config)
-        
-    switch()
-    ui.notify('Sauvegardé !')
+        ui.notify('Sauvegardé !')
+    
     ui.button('Sauvegarder', on_click=save)
     ui.button('Retour', on_click=lambda: ui.navigate.to('/profile'))
+    switch()
     ui.button('Se déconnecter', on_click=lambda: ui.navigate.to('/logout')).style('color: red')
     
 
