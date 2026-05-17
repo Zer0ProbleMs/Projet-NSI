@@ -9,24 +9,82 @@ from datetime import datetime
 
 @ui.page('/calendrier/{cal_id}')
 def Page_Calendrier(cal_id: str):
-
     user_id = app.storage.user.get('user_id')
-
     if not user_id:
         ui.navigate.to('/login')
         return
 
-    calendriers = get_user_calendars(user_id)
-
-    cal = next((c for c in calendriers if c['id'] == cal_id), None)
+    from Database import trouver_calendrier_par_id, save_user_calendars, get_amis, load_config
+    
+    # 1. On cherche à qui appartient ce calendrier
+    owner_id, cal, calendriers = trouver_calendrier_par_id(cal_id)
 
     if cal is None:
         ui.label('Calendrier introuvable').classes('text-red-500 text-2xl')
-        ui.button(
-            'Retour',
-            on_click=lambda: ui.navigate.to('/')
-        )
+        ui.button('Retour', on_click=lambda: ui.navigate.to('/'))
         return
+
+    if 'shared_with' not in cal:
+        cal['shared_with'] = {}
+
+    # 2. On vérifie les droits (Propriétaire ou Invité ?)
+    est_proprio = (user_id == owner_id)
+    permission = 'Modification' if est_proprio else cal['shared_with'].get(user_id)
+
+    if not est_proprio and not permission:
+        ui.label("Accès refusé.").classes('text-red-500 text-2xl')
+        ui.button('Retour', on_click=lambda: ui.navigate.to('/'))
+        return
+
+    # On applique ton design d'origine
+    maindesign(cal['name'], 125)
+
+    # 3. LE BOUTON ET LA FENÊTRE DE PARTAGE
+    # 3. LE BOUTON ET LA FENÊTRE DE PARTAGE
+    if est_proprio:
+        def ouvrir_dialogue_partage():
+            config_db = load_config()
+            amis_ids = get_amis(user_id)
+            options_amis = {uid: config_db[uid].get('username', uid) for uid in amis_ids}
+            
+            with ui.dialog() as diag, ui.card().style('width: 450px; padding: 20px; border-radius: 15px;'):
+                ui.label('Partager ce calendrier').classes('text-xl font-bold mb-2')
+                
+                if not options_amis:
+                    ui.label("Aucun ami enregistré.").classes('text-sm opacity-70')
+                else:
+                    ami_select = ui.select(options_amis, label='Sélectionner un ami').classes('w-full mb-2')
+                    perm_select = ui.select(['Lecture', 'Modification'], value='Lecture', label='Droits').classes('w-full mb-4')
+                    
+                    def valider_partage():
+                        if ami_select.value:
+                            cal['shared_with'][ami_select.value] = perm_select.value
+                            save_user_calendars(owner_id, calendriers)
+                            ui.notify('Permissions mises à jour !', color='positive')
+                            diag.close()
+                            ui.navigate.reload()
+                            
+                    ui.button('Valider', on_click=valider_partage).style(f'background-color: {Layout.couleurbouton}; color: white;').classes('w-full')
+                
+                if cal['shared_with']:
+                    ui.label('Ont accès :').classes('font-bold text-sm mt-4 mb-1')
+                    for uid, perm in list(cal['shared_with'].items()):
+                        nom_ami = config_db[uid].get('username', uid) if uid in config_db else uid
+                        with ui.row().classes('w-full items-center justify-between border-b py-1'):
+                            ui.label(f"👤 {nom_ami} ({perm})").classes('text-xs')
+                            def révoquer_acces(target_uid=uid):
+                                del cal['shared_with'][target_uid]
+                                save_user_calendars(owner_id, calendriers)
+                                diag.close()
+                                ui.navigate.reload()
+                            ui.button(icon='delete', color='red', on_click=révoquer_acces).props('flat dense')
+                ui.button('Fermer', on_click=diag.close).props('flat').classes('self-end mt-4')
+        
+            # /!\ C'EST CETTE LIGNE QUI MANQUAIT PEUT-ÊTRE /!\
+            diag.open() # Force la fenêtre à s'ouvrir au clic
+        
+        # Le bouton "Partager" posé sur l'écran
+        ui.button('Partager', on_click=ouvrir_dialogue_partage).props('icon=share').classes('absolute').style('top: 40px; right: 40px; z-index: 10;')
 
     maindesign(cal['name'], 125)
 

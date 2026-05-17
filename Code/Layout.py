@@ -4,6 +4,7 @@ from Login import *
 from Page_Messagerie import messagerie
 from Page_Messagerie import _ouvrir_conversation
 import Page_Messagerie as pm
+from Database import get_amis
 
 bgrose = '<style>body {background-color: #d7a0d7;}</style>'
 bgvertsombre = '<style>body {background-color: #244237;}</style>'
@@ -74,12 +75,10 @@ def maindesign(nomdepage, largeurg):
                     ui.label("Hello").style(f'background-color: {couleurbouton}; color: white').classes('text-2xl py-5 px-25 text-center font-light')
 
             # Chat
-            with ui.icon('chat').classes('cursor-pointer hover:opacity-80').style(f'position: absolute; transform: translate(-50%, -50%); left: 50%; top: 25%; color: white').props('size=5rem'):
-                messagerie()
+            messagerie()
 
             # Contacts
-            with ui.icon('contacts').classes('w-16 cursor-pointer hover:opacity-80').style(f'position: absolute; transform: translate(-50%, -50%); left: 50%; top: 35%; color: white').props('size=5rem'):
-                menu_amis()
+            menu_amis()
 
         musique_de_fond()
 
@@ -115,17 +114,13 @@ def accueildesign(nomdepage, largeurg, ncal, on_add=None):
                 ui.icon('add_circle').style(f'position: absolute; transform: translate(-50%, -50%); top: 50%; left: 50%; width: 50%; color: {fondsecondaire}').props('size=5rem')
 
             # Notifications
-            with ui.icon('notifications').classes('cursor-pointer hover:opacity-80').style(f'position: absolute; transform: translate(-50%, -50%); left: 50%; top: 15%; color: white').props('size=5rem'):
-                with ui.menu() as menu:
-                    ui.label("Hello").style(f'background-color: {couleurbouton}; color: white').classes('text-2xl py-5 px-25 text-center font-light')
+            cloche_notification()
 
             # Chat
-            with ui.icon('chat').classes('cursor-pointer hover:opacity-80').style(f'position: absolute; transform: translate(-50%, -50%); left: 50%; top: 25%; color: white').props('size=5rem'):
-                messagerie()
+            messagerie()
 
             # Contacts
-            with ui.icon('contacts').classes('w-16 cursor-pointer hover:opacity-80').style(f'position: absolute; transform: translate(-50%, -50%); left: 50%; top: 35%; color: white').props('size=5rem'):
-                menu_amis()
+            menu_amis()
 
         musique_de_fond()
 
@@ -156,17 +151,13 @@ def designaide(nomdepage, largeurg):
         with ui.row().classes('w-full items-center').style(f'-webkit-text-stroke: 3px {couleurbouton}'):
             
             # Notifications
-            with ui.icon('notifications').classes('cursor-pointer hover:opacity-80').style(f'position: absolute; transform: translate(-50%, -50%); left: 50%; top: 15%; color: white').props('size=5rem'):
-                with ui.menu() as menu:
-                    ui.label("Hello").style(f'background-color: {couleurbouton}; color: white').classes('text-2xl py-5 px-25 text-center font-light')
+            cloche_notification()
 
             # Chat
-            with ui.icon('chat').classes('cursor-pointer hover:opacity-80').style(f'position: absolute; transform: translate(-50%, -50%); left: 50%; top: 25%; color: white').props('size=5rem'):
-                messagerie()
+            messagerie()
 
             # Contacts
-            with ui.icon('contacts').classes('w-16 cursor-pointer hover:opacity-80').style(f'position: absolute; transform: translate(-50%, -50%); left: 50%; top: 35%; color: white').props('size=5rem'):
-                menu_amis()
+            menu_amis()
 
         musique_de_fond()
 
@@ -186,33 +177,6 @@ def menus():
         ui.separator().style(f'background-color: {fondsecondaire}')
         ui.menu_item('Fermer', menu.close).classes('text-2xl py-5 px-25 text-center font-light')
 
-def menu_amis():
-    from Database import load_config, get_all_user_ids
-    
-    config = load_config()
-    
-    # Récupère tous les users sauf soi-même
-    mon_id = app.storage.user.get('user_id', '')
-    amis = [(uid, config[uid].get('username', '?')) for uid in get_all_user_ids() if uid != mon_id]
-    noms = [nom for _, nom in amis]
-
-    with ui.menu().style('transform: translate(-30%, 65%); width: 20%') as menu:
-        ui.label("Amis").style(f'background-color: {couleurcontour}; color: white; {police3}').classes('text-3xl py-5 px-25 text-center font-light')
-        ui.separator().style(f'background-color: {couleurcontour}')
-        ui.input(placeholder='Rechercher...', autocomplete=noms).style(f'width: 100%; background-color: {couleurcontour}; {police5}')
-        
-        for uid, nom in amis:
-            with ui.slide_item().style(f'background-color: {fondsecondaire}; color: {couleurtexte2}; border-radius: 3px; width: 100%; height: 100%') as slide_item:
-                with ui.item(on_click=lambda u=uid: ui.navigate.to(f'/profil/{u}')):  # ← clique → profil
-                    with ui.item_section().props('avatar'):
-                        ui.icon('person')
-                    with ui.item_section():
-                        ui.item_label(nom).style(f'{police5}')
-                with slide_item.right():
-                    with ui.item(on_click=slide_item.reset):
-                        ui.item_section('Supprimer?')
-                        with ui.item_section().props('avatar'):
-                            ui.icon('delete')
 
 def menu_amis():
     from Database import load_config, get_all_user_ids
@@ -224,44 +188,44 @@ def menu_amis():
     mon_nom = config[mon_id].get('username', 'Invité')
     amis = [(uid, config[uid].get('username', '?')) for uid in get_all_user_ids() if uid != mon_id]
     noms = [nom for _, nom in amis]
-
-    with ui.menu().style(f'transform: translate(-50%, -50%); width: 20%; max-height: 380px; overflow-y: auto; background-color: {couleurcontour}; border-radius: 14px; box-shadow: 0 8px 32px #0008; padding: 0;') as menu:
-        ui.label("Amis").style(f'background-color: {fondsecondaire}; color: white; {police3}').classes('text-3xl py-5 px-25 text-center font-light')
-        ui.separator().style(f'background-color: {couleurcontour}')
-        ui.input(placeholder='Rechercher...', autocomplete=noms).style(f'width: 100%; background-color: {couleurcontour}; {police5}')
-        
-        for uid, nom in amis:
-            with ui.slide_item().style(f'background-color: {couleurcontour}; color: {couleurtexte2}; border-radius: 3px; width: 100%; height: 100%') as slide_item:
-                with ui.item(on_click=lambda u=uid: ui.navigate.to(f'/profil/{u}')):  # ← clique → profil
-                    with ui.card().style(f'background: #c084fc22; border: 1px solid {couleurcontour}; padding: 16px 20px; width: 100%; cursor: pointer;'):
-                        with ui.row().classes('items-center gap-4 w-full'):
-                            ui.label(nom[0]).style(f'width: 46px; height: 46px; border-radius: 50%; background: {couleurcontour}; color: {couleurtexte2}; font-size: 18px; display: flex; align-items: center; justify-content: center')
-                            with ui.column().classes('gap-0'):
-                                ui.label(nom).style(f'font-weight: 500; color: {couleurtexte2}; {police5}')
-                                ui.label('En ligne').style(f'font-size: 12px; color: {fondsecondaire}')
-                            ui.element('div').style('width: 8px; height: 8px; border-radius: 50%; background: #22c55e; margin-left: auto')
-                            
-                    with slide_item.right(): # Permet de faire glisser l'item vers la gauche et y afficher des options
-                        with ui.row().classes():
-                            with ui.item(on_click=slide_item.reset): # La partie pour retourner en arrière
-                                with ui.item_section().props('avatar'):
-                                    ui.icon('arrow_back_ios')
-                                ui.item_section('Annuler').style('transform: translate(-50%, 0%)')
-                            with ui.item(on_click=slide_item.delete): # Permet de supprimer une des bulles
-                                ui.item_section('Supprimer?').style('transform: translate(35%, 0%)')
-                                with ui.item_section().props('avatar'):
-                                    ui.icon('delete')
-                                    
-                    with slide_item.left(): # Permet de faire glisser l'item vers la droite et y afficher des options
-                        with ui.row().classes():
-                            with ui.item(on_click=lambda ami=nom: _ouvrir_conversation(mon_nom, ami)):
-                                ui.item_section('Envoyer Message').style('transform: translate(20%, 0%)') # Permet de renvoyer l'utilisateur au menu message
-                                with ui.item_section().props('avatar'):
-                                    ui.icon('sms')
-                            with ui.item(on_click=slide_item.reset): # La partie pour retourner en arrière
-                                with ui.item_section().props('avatar'):
-                                    ui.icon('arrow_back_ios')
-                                ui.item_section('Annuler').style('transform: translate(-50%, 0%)')
+    with ui.icon('contacts').classes('w-16 cursor-pointer hover:opacity-80').style(f'position: absolute; transform: translate(-50%, -50%); left: 50%; top: 35%; color: white').props('size=5rem'):
+        with ui.menu().style(f'transform: translate(-25%, -25%); width: 20%; max-height: 380px; overflow-y: auto; background-color: {couleurcontour}; border-radius: 14px; box-shadow: 0 8px 32px #0008; padding: 0;') as menu:
+            ui.label("Amis").style(f'background-color: {fondsecondaire}; color: white; {police3}').classes('text-3xl py-5 px-25 text-center font-light')
+            ui.separator().style(f'background-color: {couleurcontour}')
+            ui.input(placeholder='Rechercher...', autocomplete=noms).style(f'width: 100%; background-color: {couleurcontour}; {police5}')
+            
+            for uid, nom in amis:
+                with ui.slide_item().style(f'background-color: {couleurcontour}; color: {couleurtexte2}; border-radius: 3px; width: 100%; height: 100%') as slide_item:
+                    with ui.item(on_click=lambda u=uid: ui.navigate.to(f'/profil/{u}')):  # ← clique → profil
+                        with ui.card().style(f'background: #c084fc22; border: 1px solid {couleurcontour}; padding: 16px 20px; width: 100%; cursor: pointer;'):
+                            with ui.row().classes('items-center gap-4 w-full'):
+                                ui.label(nom[0]).style(f'width: 46px; height: 46px; border-radius: 50%; background: {couleurcontour}; color: {couleurtexte2}; font-size: 18px; display: flex; align-items: center; justify-content: center')
+                                with ui.column().classes('gap-0'):
+                                    ui.label(nom).style(f'font-weight: 500; color: {couleurtexte2}; {police5}')
+                                    ui.label('En ligne').style(f'font-size: 12px; color: {fondsecondaire}')
+                                ui.element('div').style('width: 8px; height: 8px; border-radius: 50%; background: #22c55e; margin-left: auto')
+                                
+                        with slide_item.right(): # Permet de faire glisser l'item vers la gauche et y afficher des options
+                            with ui.row().classes():
+                                with ui.item(on_click=slide_item.reset): # La partie pour retourner en arrière
+                                    with ui.item_section().props('avatar'):
+                                        ui.icon('arrow_back_ios')
+                                    ui.item_section('Annuler').style('transform: translate(-50%, 0%)')
+                                with ui.item(on_click=slide_item.delete): # Permet de supprimer une des bulles
+                                    ui.item_section('Supprimer?').style('transform: translate(35%, 0%)')
+                                    with ui.item_section().props('avatar'):
+                                        ui.icon('delete')
+                                        
+                        with slide_item.left(): # Permet de faire glisser l'item vers la droite et y afficher des options
+                            with ui.row().classes():
+                                with ui.item(on_click=lambda ami=nom: _ouvrir_conversation(mon_nom, ami)):
+                                    ui.item_section('Envoyer Message').style('transform: translate(20%, 0%)') # Permet de renvoyer l'utilisateur au menu message
+                                    with ui.item_section().props('avatar'):
+                                        ui.icon('sms')
+                                with ui.item(on_click=slide_item.reset): # La partie pour retourner en arrière
+                                    with ui.item_section().props('avatar'):
+                                        ui.icon('arrow_back_ios')
+                                    ui.item_section('Annuler').style('transform: translate(-50%, 0%)')
 
                             
 
@@ -297,3 +261,43 @@ def login():
                 dialog.close()
             ui.button('Sauvegarder', on_click=sauvegarder).style(f'background-color: {violetfoncé}; color: white')
     dialog.open()
+
+@ui.refreshable
+def cloche_notification():
+    from Database import obtenir_notifications, vider_notifications
+    user_id = app.storage.user.get('user_id', '')
+    
+    # Si non connecté, afficher une cloche blanche fixe
+    if not user_id:
+        ui.icon('notifications').style(f'position: absolute; transform: translate(-50%, -50%); left: 50%; top: 15%; color: white').props('size=5rem')
+        return
+
+    notifs = obtenir_notifications(user_id)
+    nb_notifs = len(notifs)
+
+    # Icône de la cloche
+    with ui.icon('notifications').classes('cursor-pointer hover:opacity-80').style(f'position: absolute; transform: translate(-50%, -50%); left: 50%; top: 15%; color: white').props('size=5rem'):
+        
+        # LE BADGE CORRIGÉ (on retire la bordure de texte ici avec -webkit-text-stroke: none)
+        if nb_notifs > 0:
+            ui.badge(str(nb_notifs), color='red').props('floating').style('-webkit-text-stroke: none; font-size: 0.8rem; color: white; font-weight: bold; padding: 2px 6px;')
+            
+        # Le menu de notifications
+        with ui.menu().style(f'background-color: {couleurbouton}; color: white; border-radius: 10px; width: 260px;') as menu:
+            if nb_notifs == 0:
+                ui.label("Aucune notification").classes('text-center py-4 opacity-70')
+            else:
+                ui.label("Nouveaux messages :").classes('text-sm font-bold p-3 underline')
+                for n in notifs:
+                    apercu_txt = n['text'][:20] + '...' if len(n['text']) > 20 else n['text']
+                    ui.menu_item(f"{n['from']} : {apercu_txt}").classes('text-xs')
+                
+                ui.separator()
+                ui.menu_item('Tout marquer comme lu', on_click=lambda: [vider_notifications(user_id), cloche_notification.refresh()]).classes('text-center font-bold text-red-300')
+
+    def refresh_si_ferme():
+        if not menu.value:
+            cloche_notification.refresh()
+
+        ui.timer(3.0, refresh_si_ferme)
+    

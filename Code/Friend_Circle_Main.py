@@ -44,41 +44,67 @@ def main_page(): # Fonction de la page principale
 
     @ui.refreshable
     def liste_calendriers():
-        with ui.scroll_area().classes('w-full h-195'):
-            with ui.grid().classes('grid-flow-col auto-cols-fr gap-4 w-max p-4'):
-                for cal in get_calendriers():
-                    cal_id = cal['id']
-                    snapshot = cal.get('snapshot', '')
+        calendriers = get_calendriers()
+        with ui.row().classes('w-full gap-6 p-4'): # Légèrement augmenté l'espace entre les cartes (gap-6)
+            for cal in calendriers:
+                # Chaque carte de calendrier - CHANGEMENT : w-72 h-80 (plus grande) au lieu de w-64 h-64
+                with ui.card().classes('w-95.5 h-150 shadow-lg flex flex-col justify-between').style(
+                    f'background-color: {Layout.couleurcalendrier}; border-radius: 15px; position: relative;'):
+                    
+                    # Entête de la carte (Nom + Menu options)
+                    with ui.row().classes('w-full justify-between items-center'):
+                        ui.label(cal['name']).classes('font-bold text-xl text-white truncate').style('max-width: 180px')
+                        
+                        # Menu trois points pour renommer/supprimer
+                        # AJOUT de .classes('stop-propagation') pour bloquer le clic sur la carte !
+                        with ui.button(icon='more_vert').props('flat round dense').classes('stop-propagation').style('color: white'):
+                            with ui.menu():
+                                ui.menu_item('Renommer', on_click=lambda c=cal['id']: boite_renommer(c))
+                                ui.menu_item('Supprimer', on_click=lambda c=cal['id']: supprimer_calendrier(c))
 
-                    with ui.card().classes('w-100 h-176').style(f'background-color: {Layout.couleurcalendrier}; border-radius: 10px; box-shadow: 0px 0px 20px {Layout.couleurcontourlogo}; overflow:hidden;'):
-                        ui.label(cal['name']).style(f'color: {Layout.couleurtexte1}').classes('font-bold text-2xl')
+                    # --- ZONE APERÇU (Ajustée pour la nouvelle taille) ---
+                    with ui.element('div').classes('w-full flex-grow bg-black/10 rounded-lg p-3 overflow-hidden text-sm text-white/90').style('margin-bottom: 55px;'):
+                        events = cal.get('events', {})
+                        if events:
+                            ui.label('Prochains événements :').classes('font-semibold mb-2 underline')
+                            compteur = 0
+                            for date, liste_ev in sorted(events.items()):
+                                if compteur >= 3: # Maintenant on peut afficher 3 événements grâce à la carte plus grande !
+                                    break
+                                for ev in liste_ev:
+                                    if compteur < 3:
+                                        try:
+                                            date_formatee = "/".join(date.split('-')[1:][::-1])
+                                        except:
+                                            date_formatee = date
+                                        ui.label(f'{date_formatee} : {ev}').classes('truncate')
+                                        compteur += 1
+                        else:
+                            with ui.column().classes('w-full h-full items-center justify-center opacity-40 gap-2'):
+                                ui.icon('calendar_today', size='lg')
+                                ui.label('Aucun événement').classes('text-xs')
 
-                        # ↓ Snapshot preview iframe
-                        ui.html(f'''
-                            <div style="position:absolute; top:12%; left:5%; width:90%; height:65%;
-                                        border-radius:8px; overflow:hidden; border:2px solid {violetfoncé};
-                                        pointer-events:none;">
-                                {snapshot}
-                            </div>
-                        ''', sanitize=False)
-
-                        with ui.image('Designs/Triple_points.png').classes(
-                            'w-12 cursor-pointer hover:opacity-80'
-                        ).style('position: absolute; transform: translate(-50%, -50%); left: 85%; top: 5%'):
-                            with ui.menu().style('transform: translate(-75%, 0%)'):
-                                with ui.menu_item("Paramètrage",on_click=lambda cid=cal_id: boite_renommer(cid)).style(f'background-color: {violetfoncé}; color: white').classes('py-2 px-25 text-center font-light text-xl'):
-                                    with ui.item_section().props('avatar'):
-                                        ui.icon('settings')
-                                ui.separator().style(f'background-color: {violet}')
-                                with ui.menu_item("Supprimer",on_click=lambda cid=cal_id: supprimer_calendrier(cid)).style(f'background-color: {violetfoncé}; color: white').classes('py-2 px-25 text-center font-light text-xl'):
-                                    with ui.item_section().props('avatar'):
-                                        ui.icon('delete')
-                                ui.separator().style(f'background-color: {violet}')
-                                with ui.menu_item('Fermer', ui.menu.close).style(f'background-color: {violetfoncé}; color: white').classes('py-2 px-25 text-center font-light text-xl'):
-                                    with ui.item_section().props('avatar'):
-                                        ui.icon('close')
-
-                        ui.button("Ouvrir",on_click=lambda cid=cal_id: ui.navigate.to(f'/calendrier/{cid}')).style(f'position: absolute; transform: translate(-50%, -50%); top: 90%; left: 50%; width: 75%; height: 15%; border-radius: 50px; {police1}').classes('text-xl font-bold')
+                    # Ton bouton "Ouvrir" ajusté pour la nouvelle hauteur (top: 88%)
+                    ui.button("Ouvrir", on_click=lambda cid=cal['id']: ui.navigate.to(f'/calendrier/{cid}')).style(
+                        f'position: absolute; transform: translate(-50%, -50%); top: 88%; left: 50%; width: 80%; height: 14%; border-radius: 50px; {police1}'
+                    ).classes('text-xl font-bold')
+        # --- EN DESSOUS DE TES PROPRES CALENDRIERS ---
+    from Database import get_calendriers_partages
+    
+    partages = get_calendriers_partages(user_id)
+    if partages:
+        ui.label('Calendriers partagés avec moi').style(f'{Layout.police3}; color: {Layout.couleurtexte1}').classes('text-2xl font-bold mt-8 mb-2')
+        with ui.row().classes('w-full gap-4'):
+            for p in partages:
+                cal_p = p['cal']
+                proprio = p['owner_name']
+                droit = p['permission']
+                
+                with ui.card().classes('w-64 p-4 cursor-pointer hover:scale-105 transition-transform').style(f'background-color: {Layout.fondsecondaire}; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1)'):
+                    ui.label(cal_p['name']).classes('text-xl font-bold').on('click', lambda cid=cal_p['id']: ui.navigate.to(f'/calendrier/{cid}'))
+                    ui.label(f"Par : {proprio}").classes('text-xs opacity-70')
+                    couleur_badge = 'orange' if droit == 'Lecture' else 'green'
+                    ui.badge(droit, color=couleur_badge).classes('text-2xs self-start mt-2')
 
     def generer_snapshot(name: str) -> str:
         jours = ['L', 'M', 'M', 'J', 'V', 'S', 'D']

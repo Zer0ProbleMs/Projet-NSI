@@ -45,27 +45,28 @@ def messagerie():
         for uid in amis_ids
         if uid in config
     ]
+    with ui.icon('chat').classes('cursor-pointer hover:opacity-80').style(f'position: absolute; transform: translate(-50%, -50%); left: 50%; top: 25%; color: white').props('size=5rem'):
 
-    with ui.menu().style(f'transform: translate(-50%, -50%); width: 300px; max-height: 400px; overflow-y: auto; background-color: {L.couleurcontour}; border-radius: 14px; box-shadow: 0 8px 32px #0008; padding: 0;') as menu:
+        with ui.menu().style(f'transform: translate(-50%, -50%); width: 300px; max-height: 400px; overflow-y: auto; background-color: {L.couleurcontour}; border-radius: 14px; box-shadow: 0 8px 32px #0008; padding: 0;') as menu:
 
-        # En-tête
-        with ui.row().classes('items-center justify-between w-full').style(f'background-color: {L.fondsecondaire}; padding: 8px 12px; border-radius: 14px 14px 0 0; flex-shrink: 0;'):
-            ui.label(f'💬  {moi}').style(f'color: {L.couleurtexte1}; font-size: .95rem; {L.police3}')
-            ui.icon('close', size='1.3rem').style(f'color: {L.couleurtexte1}; cursor: pointer; opacity: 0.7').on('click', menu.close)
+            # En-tête
+            with ui.row().classes('items-center justify-between w-full').style(f'background-color: {L.fondsecondaire}; padding: 8px 12px; border-radius: 14px 14px 0 0; flex-shrink: 0;'):
+                ui.label(f'💬  {moi}').style(f'color: {L.couleurtexte1}; font-size: .95rem; {L.police3}')
+                ui.icon('close', size='1.3rem').style(f'color: {L.couleurtexte1}; cursor: pointer; opacity: 0.7').on('click', menu.close)
 
-        ui.separator().style(f'background-color: {L.couleurbouton}; margin: 0')
+            ui.separator().style(f'background-color: {L.couleurbouton}; margin: 0')
 
-        if not amis:
-            ui.label("Aucun ami pour l'instant.").style(f'color: {L.couleurtexte2}; font-style: italic; padding: 14px; font-size: .82rem; {L.police5}')
-        else:
-            for ami in amis:
-                apercu = last_message(moi, ami)
-                with ui.row().classes('items-center w-full cursor-pointer').style(f'padding: 8px 12px; border-bottom: 1px solid {L.couleurbouton}; transition: opacity .15s;').on('click', lambda a=ami, m=menu, me=moi: [m.close(), _ouvrir_conversation(me, a)]):
-                    # Avatar initiale
-                    ui.label(ami[0].upper()).style(f'min-width: 36px; height: 36px; border-radius: 50%; background: {L.couleurbouton}; color: {L.couleurtexte2}; font-size: 1rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; {L.police4}')
-                    with ui.column().classes('gap-0').style('margin-left: 8px; min-width: 0; overflow: hidden'):
-                        ui.label(ami).style(f'color: {L.couleurtexte2}; font-weight: 600; {L.police5}; font-size: .88rem')
-                        ui.label(apercu).style(f'color: {L.couleurtexte2}; font-size: .70rem; opacity: 0.65; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 175px')
+            if not amis:
+                ui.label("Aucun ami pour l'instant.").style(f'color: {L.couleurtexte2}; font-style: italic; padding: 14px; font-size: .82rem; {L.police5}')
+            else:
+                for ami in amis:
+                    apercu = last_message(moi, ami)
+                    with ui.row().classes('items-center w-full cursor-pointer').style(f'padding: 8px 12px; border-bottom: 1px solid {L.couleurbouton}; transition: opacity .15s;').on('click', lambda a=ami, m=menu, me=moi: [m.close(), _ouvrir_conversation(me, a)]):
+                        # Avatar initiale
+                        ui.label(ami[0].upper()).style(f'min-width: 36px; height: 36px; border-radius: 50%; background: {L.couleurbouton}; color: {L.couleurtexte2}; font-size: 1rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; {L.police4}')
+                        with ui.column().classes('gap-0').style('margin-left: 8px; min-width: 0; overflow: hidden'):
+                            ui.label(ami).style(f'color: {L.couleurtexte2}; font-weight: 600; {L.police5}; font-size: .88rem')
+                            ui.label(apercu).style(f'color: {L.couleurtexte2}; font-size: .70rem; opacity: 0.65; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 175px')
 
 # Partie de l'envoie des messages
 
@@ -100,13 +101,20 @@ def _ouvrir_conversation(moi: str, ami: str):
             ui.timer(2.0, afficher_messages.refresh)
 
         # Zone saisie
+        # Zone saisie
         with ui.row().classes('items-center w-full').style(f'padding: 6px 10px; background-color: {L.fondsecondaire}; flex-shrink: 0; gap: 6px; border-radius: 0 0 14px 14px;'):
             champ = ui.input(placeholder='Message…').style(f'flex: 1; font-size: .82rem;').props('dense outlined rounded dark')
 
             def envoyer():
                 texte = champ.value.strip()
                 if texte:
+                    # 1. Envoie le message normalement
                     send_message(moi, ami, texte)
+                    
+                    # 2. ENVOIE LA NOTIFICATION (Ajoute ces deux lignes)
+                    from Database import ajouter_notification
+                    ajouter_notification(ami, moi, texte) # ami = destinataire, moi = expéditeur
+                    
                     champ.set_value('')
                     afficher_messages.refresh()
 
