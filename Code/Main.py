@@ -10,4 +10,4 @@ from Database import *
 from Login import *
 import Layout
 
-ui.run()
+ui.run(storage_secret='clé-secrete')

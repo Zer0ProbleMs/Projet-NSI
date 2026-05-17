@@ -2,11 +2,13 @@ import configparser
 import os
 from functools import wraps  # ← manquait ça
 from nicegui import app, ui  # ← manquait ça aussi
+import json
+from datetime import datetime
 
 FILE = os.path.join(os.path.dirname(__file__), "users.ini")
 
 def load_config():
-    config = configparser.ConfigParser()
+    config = configparser.ConfigParser(interpolation=None)
     config.read(FILE, encoding="utf-8")
     return config
 
@@ -44,3 +46,28 @@ def get_amis(user_id):
         uid for uid in config.sections()
         if uid.startswith("user_") and uid != user_id
     ]
+
+
+def get_user_calendars(user_id):
+    config = load_config()
+
+    if user_id not in config:
+        return []
+
+    if 'calendars' not in config[user_id]:
+        config[user_id]['calendars'] = '[]'
+        save_config(config)
+
+    try:
+        return json.loads(config[user_id]['calendars'])
+    except:
+        return []
+
+def save_user_calendars(user_id, calendars):
+    config = load_config()
+
+    if user_id not in config:
+        return
+
+    config[user_id]['calendars'] = json.dumps(calendars)
+    save_config(config)

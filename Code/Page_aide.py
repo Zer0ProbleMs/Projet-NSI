@@ -96,5 +96,3 @@ def idéesynops(texte): # Pas obligatoire, mais pareil que le synops principal, 
 
 def idée(texte): # Explication compréhensible des réponses au questions
     ui.label("> " + texte).classes('text-xl font-light').style(f'{police1}')
-
-ui.run()

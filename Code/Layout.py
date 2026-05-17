@@ -110,6 +110,10 @@ def accueildesign(nomdepage, largeurg, ncal, on_add=None):
     with ui.right_drawer(top_corner=True, bottom_corner=True, elevated=True).style(f'background-color: {couleurcontour}; width: 50%').props('width=125') as right_drawer:
         with ui.row().classes('w-full items-center').style(f'-webkit-text-stroke: 3px {couleurbouton}'):
             
+            # Ajout de Calendrier
+            with ui.button(on_click= lambda e: on_add() if on_add else ui.notify("Aucune action définie")).props('push glossy').style('position: absolute; border-radius: 50px; transform: translate(-50%, -50%); width: 65%; height: 8.5%; top: 94%; left: 50%'):
+                ui.icon('add_circle').style(f'position: absolute; transform: translate(-50%, -50%); top: 50%; left: 50%; width: 50%; color: {fondsecondaire}').props('size=5rem')
+
             # Notifications
             with ui.icon('notifications').classes('cursor-pointer hover:opacity-80').style(f'position: absolute; transform: translate(-50%, -50%); left: 50%; top: 15%; color: white').props('size=5rem'):
                 with ui.menu() as menu:

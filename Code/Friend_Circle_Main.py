@@ -1,3 +1,4 @@
+from Database import get_user_calendars, save_user_calendars
 from nicegui import app, ui
 from Layout import *
 import Layout
@@ -32,14 +33,20 @@ Ce que je veux pouvoir faire:
 @ui.page('/')
 def main_page(): # Fonction de la page principale
 
-    if 'calendriers' not in app.storage.general:
-        app.storage.general['calendriers'] = []
+    user_id = app.storage.user.get('user_id')
+
+    if not user_id:
+        ui.navigate.to('/login')
+        return
+
+    def get_calendriers():
+        return get_user_calendars(user_id)
 
     @ui.refreshable
     def liste_calendriers():
         with ui.scroll_area().classes('w-full h-195'):
             with ui.grid().classes('grid-flow-col auto-cols-fr gap-4 w-max p-4'):
-                for cal in app.storage.general['calendriers']:
+                for cal in get_calendriers():
                     cal_id = cal['id']
                     snapshot = cal.get('snapshot', '')
 
@@ -97,16 +104,25 @@ def main_page(): # Fonction de la page principale
         )
         
     def ajouter_calendrier():
+
+        calendriers = get_calendriers()
+
         new_cal = {
             'id': str(uuid.uuid4()),
-            'name': f'Calendrier {len(app.storage.general["calendriers"]) + 1}',
-            'snapshot': generer_snapshot('placeholder')  # ← simpler call
+            'name': f'Calendrier {len(calendriers) + 1}',
+            'snapshot': '',
+            'events': {}
         }
-        app.storage.general['calendriers'].append(new_cal)
+
+        calendriers.append(new_cal)
+
+        save_user_calendars(user_id, calendriers)
+
         liste_calendriers.refresh()
 
     def boite_renommer(cal_id):
-        cal = next(c for c in app.storage.general['calendriers'] if c['id'] == cal_id)
+        calendriers = get_calendriers()
+        cal = next(c for c in calendriers if c['id'] == cal_id) # <-- NOUVEAU CODE PROPRE
         with ui.dialog() as dialog, ui.card():
             ui.label('Renommer le calendrier').classes('font-bold text-xl')
             nom_entrée = ui.input('Nouveau nom', value=cal['name'])
@@ -114,18 +130,26 @@ def main_page(): # Fonction de la page principale
                 ui.button('Annuler', on_click=dialog.close)
                 def save_name():
                     cal['name'] = nom_entrée.value
-                    app.storage.general['calendriers'] = app.storage.general['calendriers']
+                    save_user_calendars(user_id, calendriers)
                     dialog.close()
                     liste_calendriers.refresh()
                 ui.button('Sauvegarder', on_click=save_name).style(f'background-color: {violetfoncé}; color: white')
         dialog.open()
 
     def supprimer_calendrier(cal_id):
-        app.storage.general['calendriers'] = [c for c in app.storage.general['calendriers'] if c['id'] != cal_id]
+
+        calendriers = [
+            c for c in get_calendriers()
+            if c['id'] != cal_id
+        ]
+
+        save_user_calendars(user_id, calendriers)
+
         liste_calendriers.refresh()
 
-    accueildesign("Accueil", 125, len(app.storage.general['calendriers']), on_add=ajouter_calendrier)
+    mes_calendriers = get_calendriers() 
 
+    accueildesign("Accueil", 125, len(mes_calendriers), on_add=ajouter_calendrier)
+    
     liste_calendriers()
 
-ui.run(storage_secret='clé-secrete')
