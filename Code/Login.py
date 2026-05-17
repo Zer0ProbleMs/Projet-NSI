@@ -23,7 +23,7 @@ def login_page():
         f'width: 400px; '
         f'min-height: 350px;'
     ):
-        Layout.friendcirclelogo("35")  # ← logo en haut
+        Layout.friendcirclelogo("17.5")  # ← logo en haut
         ui.label('Connexion').style(
             f'color: {Layout.couleurtexte1}; {Layout.police4}'
         ).classes('text-3xl font-bold mt-16')
