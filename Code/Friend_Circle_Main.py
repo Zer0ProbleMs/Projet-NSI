@@ -3,6 +3,7 @@ from nicegui import app, ui
 from Layout import *
 import Layout
 import uuid 
+
 """  
 Commande que je préfèrerais ne pas oublier:
 - .style('border-radius: value;')
@@ -16,19 +17,18 @@ Commande que je préfèrerais ne pas oublier:
 Ce que je veux pouvoir faire:
 - Changer de police de caractère | FAIT
 - Arrondir les bordure (tout en gardant le fond transparent) | FAIT
-- Déplacer les textes des menu_item vers la gauche
+- Déplacer les textes des menu_item vers la gauche | FAIT
 - Avancer sur les paramètres
 - Réussir à agrandir les bords de façon animé au clic d'une flèche => bouton. 
 - Une flèche qui étant le bord gauche, mais aussi que les différentes flèches sur ce même bords, si le bord n'est pas étendu, alors ces flèches l'étendrons.
-- Créer les premier boutons principaux qui mèneront au calendrier choisis
-- Un bouton notification et message avec chacun d'entre eux n'ouvrant pas une page mais une simple boîte avec preview et donne l'option d'ouvrir dans une nouvelle page
+- Créer les premier boutons principaux qui mèneront au calendrier choisis | FAIT
+- Un bouton notification et message avec chacun d'entre eux n'ouvrant pas une page mais une simple boîte avec preview et donne l'option d'ouvrir dans une nouvelle page | FAIT
 - Faire un ui.skeleton pour voir le squelette du site quand il charge (Secondaire)
--	Qd on modifie le pseudo il se modifie sur la base de données et le profil
--	Qd on modifie le mdp ça change sur la base de donnée 
--	Qd on change la photo de profil ça change sur la page profil
--	Qd on change la bannière 
+- Qd on modifie le pseudo il se modifie sur la base de données et le profil | FAIT
+- Qd on modifie le mdp ça change sur la base de donnée | FAIT
+- Qd on change la photo de profil ça change sur la page profil
+- Qd on change la bannière 
 """
-
 
 @ui.page('/')
 def main_page(): # Fonction de la page principale
@@ -48,31 +48,28 @@ def main_page(): # Fonction de la page principale
         with ui.row().classes('w-full gap-6 p-4'): # Légèrement augmenté l'espace entre les cartes (gap-6)
             for cal in calendriers:
                 # Chaque carte de calendrier - CHANGEMENT : w-72 h-80 (plus grande) au lieu de w-64 h-64
-                with ui.card().classes('w-95.5 h-150 shadow-lg flex flex-col justify-between').style(
-                    f'background-color: {Layout.couleurcalendrier}; border-radius: 15px; position: relative;'):
+                with ui.card().classes('w-95.5 h-150 shadow-lg flex flex-col justify-between').style(f'background-color: {Layout.couleurcalendrier}; border-radius: 15px; position: relative;'):
                     
-                    # Entête de la carte (Nom + Menu options)
+                    # Affichage du nom du calendrier
                     with ui.row().classes('w-full justify-between items-center'):
                         ui.label(cal['name']).classes('font-bold text-xl text-white truncate').style('max-width: 180px')
                         
-                        # Menu trois points pour renommer/supprimer
-                        # AJOUT de .classes('stop-propagation') pour bloquer le clic sur la carte !
+                        # Le mini menu (trois piti points) des calendrier qui permet de le supprimer et renommer
                         with ui.button(icon='more_vert').props('flat round dense').classes('stop-propagation').style('color: white'):
                             with ui.menu():
                                 ui.menu_item('Renommer', on_click=lambda c=cal['id']: boite_renommer(c))
                                 ui.menu_item('Supprimer', on_click=lambda c=cal['id']: supprimer_calendrier(c))
 
-                    # --- ZONE APERÇU (Ajustée pour la nouvelle taille) ---
                     with ui.element('div').classes('w-full flex-grow bg-black/10 rounded-lg p-3 overflow-hidden text-sm text-white/90').style('margin-bottom: 55px;'):
                         events = cal.get('events', {})
                         if events:
                             ui.label('Prochains événements :').classes('font-semibold mb-2 underline')
                             compteur = 0
                             for date, liste_ev in sorted(events.items()):
-                                if compteur >= 3: # Maintenant on peut afficher 3 événements grâce à la carte plus grande !
+                                if compteur >= 15: # Le nombre maximal d'évenement affichable sur l'aperçu
                                     break
                                 for ev in liste_ev:
-                                    if compteur < 3:
+                                    if compteur < 15:
                                         try:
                                             date_formatee = "/".join(date.split('-')[1:][::-1])
                                         except:
@@ -84,11 +81,8 @@ def main_page(): # Fonction de la page principale
                                 ui.icon('calendar_today', size='lg')
                                 ui.label('Aucun événement').classes('text-xs')
 
-                    # Ton bouton "Ouvrir" ajusté pour la nouvelle hauteur (top: 88%)
-                    ui.button("Ouvrir", on_click=lambda cid=cal['id']: ui.navigate.to(f'/calendrier/{cid}')).style(
-                        f'position: absolute; transform: translate(-50%, -50%); top: 88%; left: 50%; width: 80%; height: 14%; border-radius: 50px; {police1}'
-                    ).classes('text-xl font-bold')
-        # --- EN DESSOUS DE TES PROPRES CALENDRIERS ---
+                    # Bouton "Ouvrir" du calendrier
+                    ui.button("Ouvrir", on_click=lambda cid=cal['id']: ui.navigate.to(f'/calendrier/{cid}')).style(f'position: absolute; transform: translate(-50%, -50%); top: 88%; left: 50%; width: 80%; height: 14%; border-radius: 50px; {police1}').classes('text-xl font-bold')
     from Database import get_calendriers_partages
     
     partages = get_calendriers_partages(user_id)
@@ -109,14 +103,8 @@ def main_page(): # Fonction de la page principale
     def generer_snapshot(name: str) -> str:
         jours = ['L', 'M', 'M', 'J', 'V', 'S', 'D']
         
-        header = ''.join(
-            f'<div style="background: {violetfoncé}; color: {blanc}; text-align: center; font-size: 10px; padding: 2px; order-radius: 2px">{j}</div>'
-            for j in jours
-        )
-        days = ''.join(
-            f'<div style="background: {violet}; color: {blanc}; text-align: center; font-size: 10px; padding: 2px; border-radius: 2px">{i}</div>'
-            for i in range(1, 32)
-        )
+        header = ''.join( f'<div style="background: {violetfoncé}; color: {blanc}; text-align: center; font-size: 10px; padding: 2px; order-radius: 2px">{j}</div>' for j in jours)
+        days = ''.join(f'<div style="background: {violet}; color: {blanc}; text-align: center; font-size: 10px; padding: 2px; border-radius: 2px">{i}</div>' for i in range(1, 32))
         
         cell = f'background: {violetfoncé}; color: {blanc}; text-align: center; font-size: 10px; padding: 2px; border-radius: 2px'
         grid_style = 'display: grid; grid-template-columns: repeat(7,1fr); gap: 2px; margin-bottom: 6px'
@@ -148,7 +136,7 @@ def main_page(): # Fonction de la page principale
 
     def boite_renommer(cal_id):
         calendriers = get_calendriers()
-        cal = next(c for c in calendriers if c['id'] == cal_id) # <-- NOUVEAU CODE PROPRE
+        cal = next(c for c in calendriers if c['id'] == cal_id)
         with ui.dialog() as dialog, ui.card():
             ui.label('Renommer le calendrier').classes('font-bold text-xl')
             nom_entrée = ui.input('Nouveau nom', value=cal['name'])

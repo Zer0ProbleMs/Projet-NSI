@@ -39,8 +39,6 @@ def Page_Calendrier(cal_id: str):
     # On applique ton design d'origine
     maindesign(cal['name'], 125)
 
-    # 3. LE BOUTON ET LA FENÊTRE DE PARTAGE
-    # 3. LE BOUTON ET LA FENÊTRE DE PARTAGE
     if est_proprio:
         def ouvrir_dialogue_partage():
             config_db = load_config()
@@ -80,7 +78,6 @@ def Page_Calendrier(cal_id: str):
                             ui.button(icon='delete', color='red', on_click=révoquer_acces).props('flat dense')
                 ui.button('Fermer', on_click=diag.close).props('flat').classes('self-end mt-4')
         
-            # /!\ C'EST CETTE LIGNE QUI MANQUAIT PEUT-ÊTRE /!\
             diag.open() # Force la fenêtre à s'ouvrir au clic
         
         # Le bouton "Partager" posé sur l'écran
@@ -146,13 +143,9 @@ def Page_Calendrier(cal_id: str):
             afficher_calendrier()
 
     def ouvrir_jour(date_key):
-        with ui.dialog() as dialog, ui.card().style(
-            f'background-color: {Layout.fondsecondaire}; width: 500px'
-        ):
+        with ui.dialog() as dialog, ui.card().style(f'background-color: {Layout.fondsecondaire}; width: 500px'):
 
-            ui.label(f'Évènements du {date_key}').classes(
-                'text-2xl font-bold'
-            )
+            ui.label(f'Évènements du {date_key}').classes('text-2xl font-bold')
 
             events = cal['events'].get(date_key, [])
 
@@ -161,13 +154,7 @@ def Page_Calendrier(cal_id: str):
                     with ui.card().classes('w-full'):
                         ui.label(ev).classes('text-lg')
 
-                        ui.button(
-                            'Supprimer',
-                            on_click=lambda idx=i: (
-                                supprimer_event(date_key, idx),
-                                dialog.close()
-                            )
-                        ).props('flat color=red')
+                        ui.button('Supprimer', on_click=lambda idx=i: (supprimer_event(date_key, idx), dialog.close())).props('flat color=red')
             else:
                 ui.label('Aucun évènement')
 
@@ -192,12 +179,7 @@ def Page_Calendrier(cal_id: str):
             with ui.row():
                 ui.button('Fermer', on_click=dialog.close)
 
-                ui.button(
-                    'Ajouter',
-                    on_click=ajouter_evenement
-                ).style(
-                    f'background-color: {Layout.violetfoncé}; color: white'
-                )
+                ui.button('Ajouter', on_click=ajouter_evenement).style(f'background-color: {Layout.violetfoncé}; color: white')
 
         dialog.open()
     
@@ -213,11 +195,7 @@ def Page_Calendrier(cal_id: str):
             with ui.grid(columns=7).classes('gap-2 w-full p-5'):
 
                 for jour in jours_fr:
-                    with ui.card().classes('p-2 text-center font-bold').style(
-                        f'background-color: {Layout.violetfoncé}; '
-                        f'color: white; '
-                        f'border-radius: 10px'
-                    ):
+                    with ui.card().classes('p-2 text-center font-bold').style(f'background-color: {Layout.violetfoncé}; color: white; border-radius: 10px'):
                         ui.label(jour).classes('text-lg text-center')
 
                 month_days = calendar.monthcalendar(current_year, current_month)
@@ -238,16 +216,7 @@ def Page_Calendrier(cal_id: str):
                         if len(events) > 0:
                             couleur = Layout.violet
 
-                        with ui.card().classes(
-                            'w-full h-32 cursor-pointer'
-                        ).style(
-                            f'background-color: {couleur}; '
-                            f'border-radius: 15px; '
-                            f'overflow: hidden'
-                        ).on(
-                            'click',
-                            lambda d=date_key: ouvrir_jour(d)
-                        ):
+                        with ui.card().classes('w-full h-32 cursor-pointer').style(f'background-color: {couleur}; border-radius: 15px; overflow: hidden').on('click', lambda d=date_key: ouvrir_jour(d)):
 
                             ui.label(str(day)).classes(
                                 'text-xl font-bold'

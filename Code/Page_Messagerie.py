@@ -3,7 +3,6 @@ import Layout as L
 from Database import get_amis
 
 # Partie ou tout est stocké dans les serveurs nicegui
-
 def _conv_key(user_a: str, user_b: str) -> str:
     return "conv__" + "__".join(sorted([user_a, user_b]))
 
@@ -25,7 +24,6 @@ def last_message(user_a: str, user_b: str) -> str:
     return f"{m['from']}: {preview}"
 
 # Partie menu de la messagerie
-
 def messagerie():
     from Database import load_config
 
@@ -68,8 +66,6 @@ def messagerie():
                             ui.label(ami).style(f'color: {L.couleurtexte2}; font-weight: 600; {L.police5}; font-size: .88rem')
                             ui.label(apercu).style(f'color: {L.couleurtexte2}; font-size: .70rem; opacity: 0.65; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 175px')
 
-# Partie de l'envoie des messages
-
 def _ouvrir_conversation(moi: str, ami: str):
     with ui.dialog().props('persistent') as conv_dialog, \
          ui.card().style(f'width: 340px; height: 350px; background-color: {L.couleurcontour}; border-radius: 14px; box-shadow: 0 8px 32px #0008; padding: 0; display: flex; flex-direction: column; overflow: hidden;'):
@@ -101,17 +97,16 @@ def _ouvrir_conversation(moi: str, ami: str):
             ui.timer(2.0, afficher_messages.refresh)
 
         # Zone saisie
-        # Zone saisie
         with ui.row().classes('items-center w-full').style(f'padding: 6px 10px; background-color: {L.fondsecondaire}; flex-shrink: 0; gap: 6px; border-radius: 0 0 14px 14px;'):
             champ = ui.input(placeholder='Message…').style(f'flex: 1; font-size: .82rem;').props('dense outlined rounded dark')
 
             def envoyer():
                 texte = champ.value.strip()
                 if texte:
-                    # 1. Envoie le message normalement
+                    # Envoie le message normalement
                     send_message(moi, ami, texte)
                     
-                    # 2. ENVOIE LA NOTIFICATION (Ajoute ces deux lignes)
+                    # Envoie la notification
                     from Database import ajouter_notification
                     ajouter_notification(ami, moi, texte) # ami = destinataire, moi = expéditeur
                     

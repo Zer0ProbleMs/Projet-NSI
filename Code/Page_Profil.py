@@ -3,7 +3,6 @@ from Layout import *
 from Database import *
 import Layout
 
-
 @ui.page('/profile')
 @require_login
 def Profile():

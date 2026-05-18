@@ -73,11 +73,11 @@ def save_user_calendars(user_id, calendars):
     save_config(config)
 
 def ajouter_notification(destinataire_pseudo, de_pseudo, message_texte):
-    """Trouve l'ID du destinataire par son pseudo et lui ajoute une notification."""
+    # Trouve l'ID du destinataire par son pseudo et lui ajoute une notification à la cloche
     config = load_config()
     destinataire_id = None
     
-    # Parcourt les utilisateurs pour l'associer au bon ID (ex: user_1)
+    # Parcourt les utilisateurs pour l'associer au bon ID (par exemple: user_1)
     for section in config.sections():
         if section.startswith("user_") and section != "user_0":
             if config[section].get("username") == destinataire_pseudo:
@@ -85,7 +85,7 @@ def ajouter_notification(destinataire_pseudo, de_pseudo, message_texte):
                 break
                 
     if not destinataire_id:
-        return # Si l'utilisateur n'est pas trouvé, on fait rien
+        return # Si l'utilisateur n'est pas trouvé, le programme fait rien
         
     notifs = app.storage.general.get('global_notifications', {})
     if destinataire_id not in notifs:
@@ -98,19 +98,19 @@ def ajouter_notification(destinataire_pseudo, de_pseudo, message_texte):
     app.storage.general['global_notifications'] = notifs
 
 def obtenir_notifications(user_id):
-    """Récupère la liste des notifications de l'utilisateur connecté."""
+    # Récupère la liste des notifications de l'utilisateur qui est connecté
     notifs = app.storage.general.get('global_notifications', {})
     return notifs.get(user_id, [])
 
 def vider_notifications(user_id):
-    """Vide la liste des notifications (marquer comme lu)."""
+    # Vide la liste des notifications ("marquer comme lu")
     notifs = app.storage.general.get('global_notifications', {})
     if user_id in notifs:
         notifs[user_id] = []
         app.storage.general['global_notifications'] = notifs
 
 def trouver_calendrier_par_id(cal_id):
-    """Cherche un calendrier chez tous les utilisateurs."""
+    # Cherche un calendrier chez tous les utilisateurs.
     import json
     config = load_config()
     for section in config.sections():
@@ -125,7 +125,7 @@ def trouver_calendrier_par_id(cal_id):
     return None, None, None
 
 def get_calendriers_partages(user_id):
-    """Trouve les calendriers que les autres ont partagés avec moi."""
+    # Trouve les calendriers que les autres ont partagés avec moi.
     import json
     config = load_config()
     partages = []

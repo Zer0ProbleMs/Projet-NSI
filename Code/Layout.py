@@ -34,7 +34,6 @@ couleurcalendrier = rosemoyen
 couleurtexte1 = noir
 couleurtexte2 = blanc
 
-
 def layout():
     ui.add_head_html(fond)
     ui.colors(primary=couleurbouton)
@@ -47,17 +46,21 @@ def musique_de_fond():
     ui.button(on_click=lambda: bgmusique.props('muted'), icon='volume_off').style(f'position: absolute; left: 50%; top: 65%; transform: translate(-50%, -50%)').props('push glossy size=1.5rem')
     ui.button(on_click=lambda: bgmusique.props(remove='muted'), icon='volume_up').style(f'position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%)').props('push glossy size=1.5rem')
 
+# Design utilisé pour calendrier, paramètres et profile
 def maindesign(nomdepage, largeurg):
     ui.page_title(nomdepage)
     layout()
+    
+    # La barre haute de la page
     with ui.header(elevated=True).style(f'background-color: {couleurcontour}; height: 10%').classes('items-center justify-between') as header: # La partie couleurprimairete en haut
-        ui.label(nomdepage).style(f'{police4}; position: absolute; top: 50%; left: 10%; transform: translate(-50%, -50%);').classes('text-4xl text-left underline')
+        ui.label(nomdepage).style(f'{police4}').classes('text-4xl text-left underline')
         friendcirclelogo("47")
         ui.input(placeholder='Rechercher...').style(f'position: absolute; left: 65%; top: 20%; width: 30%; background-color: {couleurbouton}; border-radius: 5px').classes('text-xl')
         
-        with ui.button(on_click= lambda: ui.navigate.to('/profile')).props('push glossy').style('border-radius: 50px; transform: translate(-50%, -50%); width: 4.25%; top: 35%; left: 104%'):
+        with ui.button(on_click= lambda: ui.navigate.to('/profile')).props('push glossy').style('border-radius: 50px; transform: translate(-50%, -50%); width: 4.25%; top: 50%; left: 8.8%'):
             ui.icon('account_circle').props('size=4rem').props('size=4rem')
-
+            
+    # La barre gauche de la page
     with ui.left_drawer(top_corner=True, bottom_corner=True, elevated=True).style(f'background-color: {couleurcontour}; width: 50%').props(f'width={largeurg}') as left_drawer: # La partie couleurprimairete à gauche
         with ui.row().classes('w-full items-center'):
             with ui.button(icon='menu').style('top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; height: 75px; box-shadow: none; border-radius: 15px').props('push glossy'):
@@ -65,14 +68,13 @@ def maindesign(nomdepage, largeurg):
                     
         with ui.button(on_click= lambda: ui.navigate.to('/aidegénéral')).props('push glossy').style('position: absolute; border-radius: 25px; transform: translate(-50%, -50%); width: 75%; top: 95%; left: 50%'):
             ui.icon("help").props('size=4rem').style(f'color: {couleurcontour}')
-
+            
+    # La barre droite de la page
     with ui.right_drawer(top_corner=True, bottom_corner=True, elevated=True).style(f'background-color: {couleurcontour}; width: 50%').props('width=125') as right_drawer:
         with ui.row().classes('w-full items-center').style(f'-webkit-text-stroke: 3px {couleurbouton}'):
             
             # Notifications
-            with ui.icon('notifications').classes('cursor-pointer hover:opacity-80').style(f'position: absolute; transform: translate(-50%, -50%); left: 50%; top: 15%; color: white').props('size=5rem'):
-                with ui.menu() as menu:
-                    ui.label("Hello").style(f'background-color: {couleurbouton}; color: white').classes('text-2xl py-5 px-25 text-center font-light')
+            cloche_notification()
 
             # Chat
             messagerie()
@@ -80,32 +82,34 @@ def maindesign(nomdepage, largeurg):
             # Contacts
             menu_amis()
 
+        # Lance la musique de fond
         musique_de_fond()
-
-
-            
-            
-    footer = ui.footer().style(f'background-color: {couleurcontour}') # La partie couleurprimaire en bas
+        
+    # La barre basse de la page
+    footer = ui.footer().style(f'background-color: {couleurcontour}')
 
 def accueildesign(nomdepage, largeurg, ncal, on_add=None):
     ui.page_title(nomdepage)
     layout()   
-
+    
+    # La barre haute de la page
     with ui.header(elevated=True).style(f'background-color: {couleurcontour}; height: 10%').classes('items-center justify-between'):
-        ui.label(nomdepage).style(f'{police4}; position: absolute; top: 50%; left: 10%; transform: translate(-50%, -50%);').classes('text-4xl text-left underline') 
+        ui.label(nomdepage).style(f'{police4}').classes('text-4xl text-left underline')
         friendcirclelogo("47")
         ui.input(placeholder='Rechercher...').style(f'position: absolute; left: 65%; top: 20%; width: 30%; background-color: {couleurbouton}; border-radius: 5px').classes('text-xl')
         
-        with ui.button(on_click= lambda: ui.navigate.to('/profile')).props('push glossy').style('border-radius: 50px; transform: translate(-50%, -50%); width: 4.25%; top: 35%; left: 104%'):
+        with ui.button(on_click= lambda: ui.navigate.to('/profile')).props('push glossy').style('border-radius: 50px; transform: translate(-50%, -50%); width: 4.25%; top: 50%; left: 8.8%'):
             ui.icon('account_circle').props('size=4rem').props('size=4rem')
     
+    # La barre gauche de la page
     with ui.left_drawer(top_corner=True, bottom_corner=True, elevated=True).style(f'background-color: {couleurcontour}; width: 50%').props(f'width={largeurg}'):
         with ui.row().classes('w-full items-center'):
             with ui.button(icon='menu').style('top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; height: 75px; box-shadow: none; border-radius: 15px').props('push glossy'):
                 menus()
         with ui.button(on_click= lambda: ui.navigate.to('/aidegénéral')).props('push glossy').style('position: absolute; border-radius: 25px; transform: translate(-50%, -50%); width: 75%; top: 95%; left: 50%'):
             ui.icon("help").props('size=4rem').style(f'color: {couleurcontour}')
-            
+    
+    # La barre droite de la page        
     with ui.right_drawer(top_corner=True, bottom_corner=True, elevated=True).style(f'background-color: {couleurcontour}; width: 50%').props('width=125') as right_drawer:
         with ui.row().classes('w-full items-center').style(f'-webkit-text-stroke: 3px {couleurbouton}'):
             
@@ -122,22 +126,26 @@ def accueildesign(nomdepage, largeurg, ncal, on_add=None):
             # Contacts
             menu_amis()
 
+        # Lance la musique de fond
         musique_de_fond()
 
+    # La barre basse de la page
     ui.footer().style(f'background-color: {couleurcontour}')         
 
 def designaide(nomdepage, largeurg):
     ui.page_title(nomdepage)
     layout()   
 
+    # La barre haute de la page
     with ui.header(elevated=True).style(f'background-color: {couleurcontour}; height: 10%').classes('items-center justify-between'):
-        ui.label(nomdepage).style(f'{police4}; position: absolute; top: 50%; left: 5%; transform: translate(-50%, -50%);').classes('text-4xl text-left underline')
+        ui.label(nomdepage).style(f'{police4}').classes('text-4xl text-left underline')
         friendcirclelogo("45")
         ui.input(placeholder='Rechercher...').style(f'position: absolute; left: 65%; top: 20%; width: 30%; background-color: {couleurbouton}; border-radius: 5px').classes('text-xl')
         
-        with ui.button(on_click= lambda: ui.navigate.to('/profile')).props('push glossy').style('border-radius: 50px; transform: translate(-50%, -50%); width: 4.75%; top: 35%; left: 104%'):
+        with ui.button(on_click= lambda: ui.navigate.to('/profile')).props('push glossy').style('border-radius: 50px; transform: translate(-50%, -50%); width: 4.25%; top: 50%; left: 8.8%'):
             ui.icon('account_circle').props('size=4rem').props('size=4rem')
 
+    # La barre gauche de la page
     with ui.left_drawer(top_corner=True, bottom_corner=True, elevated=True).style(f'background-color: {couleurcontour}; width: 50%').props(f'width={largeurg}'):
         with ui.row().classes('w-full items-center'):
             with ui.button(icon='menu').style('top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; height: 100px; box-shadow: none; border-radius: 15px').props('push glossy'):
@@ -147,6 +155,7 @@ def designaide(nomdepage, largeurg):
         with ui.button(on_click= lambda: ui.navigate.to('/aidegénéral')).props('push glossy').style('position: absolute; border-radius: 25px; transform: translate(-50%, -50%); width: 75%; top: 95%; left: 50%'):
             ui.icon("help").props('size=4rem').style(f'color: {couleurcontour}')
 
+    # La barre droite de la page
     with ui.right_drawer(top_corner=True, bottom_corner=True, elevated=True).style(f'background-color: {couleurcontour}; width: 50%').props('width=125') as right_drawer:
         with ui.row().classes('w-full items-center').style(f'-webkit-text-stroke: 3px {couleurbouton}'):
             
@@ -159,10 +168,10 @@ def designaide(nomdepage, largeurg):
             # Contacts
             menu_amis()
 
+        # Lance la musique de fond
         musique_de_fond()
 
-            #Les boutons notifications et messages se trouverons la!
-
+    # La barre basse de la page
     ui.footer().style(f'background-color: {couleurcontour}')
 
 def menus():
@@ -176,7 +185,6 @@ def menus():
         ui.menu_item('Paramètres', on_click=lambda: ui.navigate.to('/parametres')).classes('text-2xl py-5 px-25 text-center font-light')
         ui.separator().style(f'background-color: {fondsecondaire}')
         ui.menu_item('Fermer', menu.close).classes('text-2xl py-5 px-25 text-center font-light')
-
 
 def menu_amis():
     from Database import load_config, get_all_user_ids
@@ -226,10 +234,7 @@ def menu_amis():
                                     with ui.item_section().props('avatar'):
                                         ui.icon('arrow_back_ios')
                                     ui.item_section('Annuler').style('transform: translate(-50%, 0%)')
-
-                            
-
-                                
+      
 def listeaides():
     with ui.scroll_area().classes('w-65 h-full'):
         with ui.column().classes('w-full h-full').style(f"transform: translate(-5%); {police3}"):
@@ -278,7 +283,7 @@ def cloche_notification():
     # Icône de la cloche
     with ui.icon('notifications').classes('cursor-pointer hover:opacity-80').style(f'position: absolute; transform: translate(-50%, -50%); left: 50%; top: 15%; color: white').props('size=5rem'):
         
-        # LE BADGE CORRIGÉ (on retire la bordure de texte ici avec -webkit-text-stroke: none)
+        # Le badge notification de la cloche
         if nb_notifs > 0:
             ui.badge(str(nb_notifs), color='red').props('floating').style('-webkit-text-stroke: none; font-size: 0.8rem; color: white; font-weight: bold; padding: 2px 6px;')
             
@@ -295,9 +300,9 @@ def cloche_notification():
                 ui.separator()
                 ui.menu_item('Tout marquer comme lu', on_click=lambda: [vider_notifications(user_id), cloche_notification.refresh()]).classes('text-center font-bold text-red-300')
 
+    # Raffraichi les notification chaques 3 secondes à par si le menu est ouvert (sinon ça le ferme)
     def refresh_si_ferme():
         if not menu.value:
             cloche_notification.refresh()
 
         ui.timer(3.0, refresh_si_ferme)
-    

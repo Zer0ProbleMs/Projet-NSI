@@ -18,7 +18,6 @@ def parametres():
     password = ui.input('Mot de passe', value=user['password'], password=True, password_toggle_button=True)
     bio = ui.textarea('Bio', value=user['bio'])
 
-
     def save():
         user_id = app.storage.user['user_id']  # ← récupère l'id de la session
         config[user_id]['username'] = name.value
@@ -33,7 +32,6 @@ def parametres():
     switch()
     ui.button('Se déconnecter', on_click=lambda: ui.navigate.to('/logout')).style('color: red')
     
-
 def changer_theme(e): # C'est ici qu'on insère les thèmes qu'on veut
     global theme_sombre
     Layout.theme_sombre = e.value
